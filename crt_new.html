@@ -124,7 +124,31 @@
             margin-inline: auto;
             padding-inline: var(--aq-pad-i);
             padding-top: var(--aq-pad-t);
-            background-color: var(--bg-page);
+            background:
+                /* Основной радиальный градиент */
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 60% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+                /* Лучи света */
+                conic-gradient(from 45deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(220, 38, 38, 0.08) 30deg,
+                    transparent 60deg,
+                    rgba(59, 130, 246, 0.06) 120deg,
+                    transparent 150deg,
+                    rgba(245, 158, 11, 0.05) 210deg,
+                    transparent 240deg,
+                    rgba(34, 197, 94, 0.04) 300deg,
+                    transparent 330deg
+                ),
+                /* Базовый градиент */
+                linear-gradient(135deg,
+                    #1e293b 0%,
+                    #334155 25%,
+                    #475569 50%,
+                    #334155 75%,
+                    #1e293b 100%
+                );
             border: var(--frame-b) solid var(--frame-c);
             border-radius: var(--frame-radius);
             overflow: hidden;
@@ -139,6 +163,73 @@
             flex-direction: column;
             justify-content: flex-end;
             margin: 0;
+            background:
+                /* Основной радиальный градиент */
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 60% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+                /* Лучи света */
+                conic-gradient(from 45deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(220, 38, 38, 0.08) 30deg,
+                    transparent 60deg,
+                    rgba(59, 130, 246, 0.06) 120deg,
+                    transparent 150deg,
+                    rgba(245, 158, 11, 0.05) 210deg,
+                    transparent 240deg,
+                    rgba(34, 197, 94, 0.04) 300deg,
+                    transparent 330deg
+                ),
+                /* Базовый градиент */
+                linear-gradient(135deg,
+                    #1e293b 0%,
+                    #334155 25%,
+                    #475569 50%,
+                    #334155 75%,
+                    #1e293b 100%
+                );
+            position: relative;
+        }
+
+        /* Header анимированные эффекты */
+        .aq__header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 15% 85%, rgba(220, 38, 38, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 45% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 20%);
+            animation: retroPulse 8s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .aq__header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            background: conic-gradient(from 0deg,
+                transparent 0deg,
+                rgba(220, 38, 38, 0.03) 45deg,
+                transparent 90deg,
+                rgba(59, 130, 246, 0.02) 135deg,
+                transparent 180deg,
+                rgba(245, 158, 11, 0.025) 225deg,
+                transparent 270deg,
+                rgba(34, 197, 94, 0.02) 315deg,
+                transparent 360deg
+            );
+            animation: retroRotate 20s linear infinite;
+            z-index: 2;
+            pointer-events: none;
         }
 
         /* Stepper */
@@ -146,6 +237,8 @@
             min-height: var(--stepper-h);
             margin-bottom: var(--gap-stepper-hdr);
             display: flex;
+            position: relative;
+            z-index: 10;
             justify-content: space-between;
             gap: var(--s-2);
         }
@@ -214,14 +307,43 @@
             grid-template-rows: var(--title-h) var(--subtitle-h);
             align-content: start;
             margin: 0;
+            background:
+                /* Основной радиальный градиент */
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 60% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+                /* Лучи света */
+                conic-gradient(from 45deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(220, 38, 38, 0.08) 30deg,
+                    transparent 60deg,
+                    rgba(59, 130, 246, 0.06) 120deg,
+                    transparent 150deg,
+                    rgba(245, 158, 11, 0.05) 210deg,
+                    transparent 240deg,
+                    rgba(34, 197, 94, 0.04) 300deg,
+                    transparent 330deg
+                ),
+                /* Базовый градиент */
+                linear-gradient(135deg,
+                    #1e293b 0%,
+                    #334155 25%,
+                    #475569 50%,
+                    #334155 75%,
+                    #1e293b 100%
+                );
+            position: relative;
         }
 
         .aq__title {
             font-size: 18px;
             font-weight: 700;
-            color: var(--fg);
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             margin: 0;
             white-space: nowrap;
+            position: relative;
+            z-index: 10;
             overflow: hidden;
             text-overflow: ellipsis;
             align-self: end;
@@ -230,9 +352,12 @@
         .aq__subtitle {
             font-size: 14px;
             font-weight: 500;
-            color: var(--fg-muted);
+            color: #e2e8f0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
             margin: 0;
             white-space: nowrap;
+            position: relative;
+            z-index: 10;
             overflow: hidden;
             text-overflow: ellipsis;
         }
@@ -263,39 +388,107 @@
             align-items: center;
             overflow: hidden;
             border-radius: 12px;
-            background: transparent;
+            background:
+                /* Основной радиальный градиент */
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 60% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+                /* Лучи света */
+                conic-gradient(from 45deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(220, 38, 38, 0.08) 30deg,
+                    transparent 60deg,
+                    rgba(59, 130, 246, 0.06) 120deg,
+                    transparent 150deg,
+                    rgba(245, 158, 11, 0.05) 210deg,
+                    transparent 240deg,
+                    rgba(34, 197, 94, 0.04) 300deg,
+                    transparent 330deg
+                ),
+                /* Базовый градиент */
+                linear-gradient(135deg,
+                    #1e293b 0%,
+                    #334155 25%,
+                    #475569 50%,
+                    #334155 75%,
+                    #1e293b 100%
+                );
+            position: relative;
+        }
+
+        /* Анимированные геометрические элементы */
+        .monitor-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                /* Движущиеся круги */
+                radial-gradient(circle at 15% 85%, rgba(220, 38, 38, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 45% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 20%);
+            animation: retroPulse 8s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Дополнительные световые эффекты */
+        .monitor-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            background: conic-gradient(from 0deg,
+                transparent 0deg,
+                rgba(220, 38, 38, 0.03) 45deg,
+                transparent 90deg,
+                rgba(59, 130, 246, 0.02) 135deg,
+                transparent 180deg,
+                rgba(245, 158, 11, 0.025) 225deg,
+                transparent 270deg,
+                rgba(34, 197, 94, 0.02) 315deg,
+                transparent 360deg
+            );
+            animation: retroRotate 20s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes retroPulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes retroRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .monitor-outer {
-            background:
-                linear-gradient(145deg, #2d3748, #1a202c),
-                linear-gradient(to bottom, #2d3748 0%, #1a202c 50%, #0f1419 100%);
+            background: #2d3748;
             padding: clamp(1.2rem, 2.5vw, 2.5rem);
             border-radius: clamp(0.8rem, 1.5vw, 1.5rem);
-            box-shadow:
-                inset 0 4px 8px rgba(255, 255, 255, 0.08),
-                inset 0 -4px 8px rgba(0, 0, 0, 0.4),
-                inset 2px 0 6px rgba(255, 255, 255, 0.03),
-                inset -2px 0 6px rgba(0, 0, 0, 0.3),
-                0 8px 32px rgba(0, 0, 0, 0.5),
-                0 2px 8px rgba(0, 0, 0, 0.3);
             position: relative;
+            z-index: 10;
             width: 100%;
             height: 100%;
             box-sizing: border-box;
-            border: 1px solid #3a404a;
+            border: 8px solid #3a404a;
         }
 
         .monitor-outer::before {
-            content: '';
-            position: absolute;
-            top: 0.5rem;
-            left: 0.5rem;
-            right: 0.5rem;
-            bottom: 0.5rem;
-            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%);
-            border-radius: clamp(0.6rem, 1.2vw, 1.2rem);
-            pointer-events: none;
+            display: none;
         }
 
         @media (max-width: 784px) {
@@ -326,12 +519,9 @@
             box-shadow:
                 inset 0 0 40px rgba(0,0,0,0.9),
                 inset 0 0 80px rgba(0,0,0,0.6),
-                inset 0 4px 12px rgba(0,0,0,0.8),
-                inset 0 -2px 6px rgba(0,0,0,0.5),
-                0 0 30px rgba(var(--primary-rgb),0.15),
-                0 0 60px rgba(var(--primary-rgb),0.05);
-            border: 2px solid #1a1a1a;
-            transform: perspective(1200px) rotateX(1deg);
+                inset 0 2px 6px rgba(0,0,0,0.8),
+                inset 0 -2px 6px rgba(0,0,0,0.5);
+            border: 1px solid #1a1a1a;
         }
 
         .crt-screen::before {
@@ -1138,14 +1328,95 @@
             }
         }
 
+        /* Medium screens - fix width at 522px and content */
+        @media (min-width: 769px) {
+            .monitor-outer {
+                width: 522px;
+                height: 100%;
+                margin: 0 auto;
+            }
+
+            .screen-content {
+                padding: 0.8rem;
+            }
+
+            .screen-header {
+                padding: 0.4rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .candidates-list {
+                gap: 0.5rem;
+            }
+
+            .candidate-card {
+                padding: 0.6rem;
+                font-size: 0.75rem;
+            }
+
+            .approval-container {
+                gap: 0.5rem;
+            }
+
+            .curriculum-container {
+                gap: 0.5rem;
+            }
+
+            .curriculum-day {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            /* Убираем все clamp и responsive значения */
+            .monitor-outer {
+                padding: 1.5rem !important;
+                border-radius: 1rem !important;
+            }
+
+            .crt-screen {
+                border-radius: 0.5rem !important;
+                padding: 1rem !important;
+            }
+
+            .screen-header {
+                border-bottom: 1px solid rgba(var(--accent-rgb), 0.3) !important;
+            }
+
+            .candidate-avatar {
+                width: 2.5rem !important;
+                height: 2.5rem !important;
+            }
+
+            .candidate-name {
+                font-size: 0.9rem !important;
+            }
+
+            .stat {
+                font-size: 0.7rem !important;
+            }
+
+            .approve-btn, .reject-btn {
+                padding: 0.5rem 0.8rem !important;
+                font-size: 0.7rem !important;
+            }
+        }
+
         /* CRT frame borders for large screens - make them thinner */
         @media (min-width: 1200px) {
+            .aq__viewport {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
             .monitor-outer {
                 border: 1px solid #3a404a;
             }
 
             .crt-screen {
                 border: 1px solid #1a1a1a;
+                transform: none;
             }
 
             .requirement-checkbox {
@@ -1162,12 +1433,19 @@
         }
 
         @media (min-width: 1600px) {
+            .aq__viewport {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
             .monitor-outer {
                 border: 1px solid #3a404a;
             }
 
             .crt-screen {
                 border: 1px solid #1a1a1a;
+                transform: none;
             }
 
             .screen-header {
@@ -1373,13 +1651,81 @@
             height: var(--ftr-h);
             display: flex;
             align-items: center;
+            background:
+                /* Основной радиальный градиент */
+                radial-gradient(circle at 20% 30%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 60% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 40%),
+                /* Лучи света */
+                conic-gradient(from 45deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(220, 38, 38, 0.08) 30deg,
+                    transparent 60deg,
+                    rgba(59, 130, 246, 0.06) 120deg,
+                    transparent 150deg,
+                    rgba(245, 158, 11, 0.05) 210deg,
+                    transparent 240deg,
+                    rgba(34, 197, 94, 0.04) 300deg,
+                    transparent 330deg
+                ),
+                /* Базовый градиент */
+                linear-gradient(135deg,
+                    #1e293b 0%,
+                    #334155 25%,
+                    #475569 50%,
+                    #334155 75%,
+                    #1e293b 100%
+                );
             justify-content: space-between;
             padding-block: 0;
+        }
+
+        /* Footer анимированные эффекты */
+        .aq__footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 15% 85%, rgba(220, 38, 38, 0.1) 0%, transparent 25%),
+                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 45% 90%, rgba(245, 158, 11, 0.06) 0%, transparent 20%);
+            animation: retroPulse 8s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .aq__footer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            background: conic-gradient(from 0deg,
+                transparent 0deg,
+                rgba(220, 38, 38, 0.03) 45deg,
+                transparent 90deg,
+                rgba(59, 130, 246, 0.02) 135deg,
+                transparent 180deg,
+                rgba(245, 158, 11, 0.025) 225deg,
+                transparent 270deg,
+                rgba(34, 197, 94, 0.02) 315deg,
+                transparent 360deg
+            );
+            animation: retroRotate 20s linear infinite;
+            z-index: 2;
+            pointer-events: none;
         }
 
         .aq__actions {
             display: flex;
             gap: var(--s-2);
+            position: relative;
+            z-index: 10;
             width: 100%;
             justify-content: space-between;
         }
