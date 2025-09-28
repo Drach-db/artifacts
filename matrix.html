@@ -1,0 +1,3051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Selector for Tilda - Fixed</title>
+    <style>
+        /* Сброс стилей для изоляции от Tilda */
+        .tilda-category-widget * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0; 
+                transform: translateX(-30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateX(0); 
+            }
+        }
+        
+        @keyframes pulseGlow {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 2px 8px rgba(57, 141, 141, 0.25);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 0 4px 16px rgba(57, 141, 141, 0.4);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 2px 8px rgba(57, 141, 141, 0.25);
+            }
+        }
+
+        /* Основной контейнер - изолируем от Tilda */
+        .tilda-category-widget {
+            width: 100% !important;
+            max-width: 977px !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            background: transparent !important;
+            position: relative !important;
+            z-index: 1 !important;
+            clear: both !important;
+            display: block !important;
+        }
+
+        /* Планшеты - следуем ТЗ */
+        @media (max-width: 1365px) {
+            .tilda-category-widget {
+                max-width: 730px !important;
+                padding: 0 clamp(1rem, 2vw, 1.25rem) !important;
+            }
+        }
+
+        /* Средние планшеты */
+        @media (max-width: 1000px) {
+            .tilda-category-widget {
+                max-width: 680px !important;
+                padding: 0 clamp(0.875rem, 1.8vw, 1.125rem) !important;
+            }
+        }
+
+        .category-main-container {
+            width: 100% !important;
+            min-height: clamp(480px, 60vh, 580px) !important;
+            background-color: #FFFFFF !important;
+            border-radius: clamp(18px, 2.5vw, 24px) !important;
+            overflow: hidden !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+            border: 1px solid #F0F0F0 !important;
+            position: relative !important;
+            z-index: 2 !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-main-container {
+                min-height: clamp(450px, 55vh, 520px) !important;
+                border-radius: clamp(16px, 2.2vw, 20px) !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-main-container {
+                min-height: clamp(420px, 50vh, 480px) !important;
+                border-radius: clamp(14px, 2vw, 18px) !important;
+            }
+        }
+
+        .category-grid {
+            display: grid !important;
+            grid-template-columns: clamp(220px, 30%, 300px) 1fr !important;
+            min-height: clamp(480px, 60vh, 580px) !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-grid {
+                grid-template-columns: clamp(200px, 28%, 260px) 1fr !important;
+                min-height: clamp(450px, 55vh, 520px) !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-grid {
+                grid-template-columns: clamp(180px, 25%, 220px) 1fr !important;
+                min-height: clamp(420px, 50vh, 460px) !important;
+            }
+        }
+
+        /* Левая панель */
+        .category-left-panel {
+            background-color: #FFFFFF !important;
+            border-right: 1px solid #E5E7EB !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .category-left-header {
+            height: 110px !important;
+            padding: 24px clamp(16px, 2vw, 20px) 0 !important;
+            border-bottom: 2px solid #E5E7EB !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+        }
+
+        .category-left-title {
+            font-size: clamp(0.75rem, 1.4vw, 0.875rem) !important;
+            font-weight: 700 !important;
+            color: #3B3B3B !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+            margin: 0 0 clamp(6px, 1vw, 8px) 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: clamp(6px, 0.8vw, 8px) !important;
+            min-height: 20px !important;
+        }
+
+        /* Планшетная адаптация для левого заголовка */
+        @media (max-width: 1365px) {
+            .category-left-title {
+                font-size: 0.8125rem !important;
+                min-height: 18px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-left-title {
+                font-size: 0.75rem !important;
+                min-height: 16px !important;
+            }
+        }
+
+        .category-left-subtitle {
+            font-size: clamp(0.75rem, 1.2vw, 0.8125rem) !important;
+            font-weight: 400 !important;
+            color: #6B7280 !important;
+            margin: clamp(8px, 1.2vw, 12px) 0 0 0 !important;
+            padding-left: clamp(24px, 3vw, 28px) !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        /* Планшетная адаптация для подзаголовка */
+        @media (max-width: 1365px) {
+            .category-left-subtitle {
+                margin: 8px 0 0 0 !important;
+                font-size: 0.75rem !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-left-subtitle {
+                margin: 6px 0 0 0 !important;
+                font-size: 0.7rem !important;
+            }
+        }
+
+        .category-list {
+            padding: clamp(16px, 2.4vw, 24px) clamp(16px, 2vw, 20px) clamp(16px, 2vw, 20px) !important;
+            flex: 1 !important;
+        }
+
+        .category-item {
+            padding: 12px 16px !important;
+            margin-bottom: 10px !important;
+            background-color: #FFFFFF !important;
+            color: #6B7280 !important;
+            cursor: pointer !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+            transform: translateX(0) !important;
+            border: 1px solid #E5E7EB !important;
+            text-decoration: none !important;
+            position: relative !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-item {
+                padding: 10px 14px !important;
+                margin-bottom: 8px !important;
+                font-size: 12px !important;
+                gap: 6px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-item {
+                padding: 8px 12px !important;
+                margin-bottom: 6px !important;
+                font-size: 11px !important;
+                gap: 6px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        .category-item.active {
+            background: linear-gradient(135deg, #398D8D 0%, #4A9B9B 100%) !important;
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+            box-shadow: 0 3px 10px rgba(57, 141, 141, 0.25) !important;
+            transform: translateX(3px) !important;
+            border: none !important;
+        }
+
+        .category-item:hover:not(.active) {
+            background-color: #F7F7F7 !important;
+            transform: translateX(1px) !important;
+        }
+
+        .category-icon {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 34px !important;
+            height: 34px !important;
+            border-radius: 8px !important;
+            background-color: #F7F7F7 !important;
+            color: #6B7280 !important;
+            flex-shrink: 0 !important;
+        }
+
+        .category-item.active .category-icon {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Правая панель */
+        .category-right-panel {
+            background-color: #FFFFFF !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .category-left-header {
+            height: 110px !important;
+            padding: 24px clamp(16px, 2vw, 20px) 0 !important;
+            border-bottom: 2px solid #E5E7EB !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            box-sizing: border-box !important;
+        }
+
+        .category-right-header {
+            height: 110px !important;
+            background-color: #FAFAFA !important;
+            border-bottom: 2px solid #E5E7EB !important;
+            padding: 24px 32px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-left-header {
+                height: 100px !important;
+                padding: 20px clamp(14px, 1.8vw, 18px) 0 !important;
+            }
+            
+            .category-right-header {
+                height: 100px !important;
+                padding: 20px 28px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-left-header {
+                height: 90px !important;
+                padding: 16px clamp(12px, 1.5vw, 16px) 0 !important;
+            }
+            
+            .category-right-header {
+                height: 90px !important;
+                padding: 16px 24px !important;
+            }
+        }
+
+        .category-service-title {
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            color: #3B3B3B !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+            margin: 0 0 18px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            min-height: 20px !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-service-title {
+                font-size: 13px !important;
+                margin: 0 0 16px 0 !important;
+                min-height: 18px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-service-title {
+                font-size: 12px !important;
+                margin: 0 0 14px 0 !important;
+                min-height: 16px !important;
+            }
+        }
+
+        .category-service-buttons {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 8px !important;
+        }
+
+        .category-service-button {
+            padding: 12px 16px !important;
+            background-color: transparent !important;
+            color: #6B7280 !important;
+            cursor: pointer !important;
+            font-size: 12px !important;
+            font-weight: 400 !important;
+            border-radius: 10px !important;
+            transition: all 0.2s ease !important;
+            text-align: center !important;
+            border: 2px solid transparent !important;
+            white-space: nowrap !important;
+            text-decoration: none !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-service-button {
+                padding: 10px 14px !important;
+                font-size: 11px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-service-button {
+                padding: 8px 12px !important;
+                font-size: 10px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        .category-service-button.active {
+            background-color: #FFFFFF !important;
+            color: #398D8D !important;
+            font-weight: 600 !important;
+            border: 2px solid #398D8D !important;
+            box-shadow: 0 2px 8px rgba(57, 141, 141, 0.15) !important;
+        }
+
+        .category-service-button:hover:not(.active) {
+            background-color: #FFFFFF !important;
+            border: 2px solid #E5E7EB !important;
+        }
+
+        /* Основной контент */
+        .category-main-content {
+            flex: 1 !important;
+            padding: 30px 36px 28px !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-main-content {
+                padding: 26px 30px 24px !important;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .category-main-content {
+                padding: 24px 26px 22px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-main-content {
+                padding: 20px 22px 18px !important;
+            }
+        }
+
+        /* Слайд контент */
+        .category-slide-content {
+            flex: 1 !important;
+            position: relative !important;
+            z-index: 3 !important;
+            margin-bottom: 12px !important;
+        }
+
+        .category-slide-card {
+            background: #FFFFFF !important;
+            padding: 32px !important;
+            border-radius: 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: relative !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            min-height: 320px !important;
+            height: 320px !important;
+            animation: fadeInUp 0.4s ease-out !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-slide-card {
+                padding: 28px !important;
+                border-radius: 18px !important;
+                min-height: 280px !important;
+                height: 280px !important;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .category-slide-card {
+                padding: 24px !important;
+                border-radius: 16px !important;
+                min-height: 260px !important;
+                height: 260px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-slide-card {
+                padding: 20px !important;
+                border-radius: 14px !important;
+                min-height: 240px !important;
+                height: 240px !important;
+            }
+        }
+
+        .category-slide-card.problems {
+            border: 1px solid #FFE4DF !important;
+        }
+
+        .category-slide-card.solution {
+            border: 1px solid #E5F4F0 !important;
+            position: relative !important;
+        }
+
+        /* Плашка с ценой */
+        .category-price-badge {
+            position: absolute !important;
+            top: 16px !important;
+            right: 16px !important;
+            background: #10B981 !important;
+            color: #FFFFFF !important;
+            padding: 10px 16px !important;
+            border-radius: 6px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0 !important;
+            text-transform: none !important;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2) !important;
+            z-index: 10 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Планшетная адаптация для плашки */
+        @media (max-width: 1365px) {
+            .category-price-badge {
+                top: 14px !important;
+                right: 14px !important;
+                padding: 9px 14px !important;
+                font-size: 15px !important;
+                border-radius: 5px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-price-badge {
+                top: 12px !important;
+                right: 12px !important;
+                padding: 8px 12px !important;
+                font-size: 14px !important;
+                border-radius: 5px !important;
+            }
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 784px) {
+            .category-price-badge {
+                top: 10px !important;
+                right: 10px !important;
+                padding: 7px 10px !important;
+                font-size: 13px !important;
+                border-radius: 4px !important;
+            }
+        }
+
+        .category-slide-header {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            margin-bottom: 24px !important;
+            display: flex !important;
+            align-items: center !important;
+            letter-spacing: -0.02em !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-slide-header {
+                font-size: 18px !important;
+                margin-bottom: 20px !important;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .category-slide-header {
+                font-size: 17px !important;
+                margin-bottom: 18px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-slide-header {
+                font-size: 16px !important;
+                margin-bottom: 16px !important;
+            }
+        }
+
+        .category-slide-header.problems {
+            color: #991B1B !important;
+        }
+
+        .category-slide-header.solution {
+            color: #14532D !important;
+        }
+
+        .category-slide-icon {
+            margin-right: 10px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 18px !important;
+            height: 18px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .category-slide-list {
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+            flex: 1 !important;
+        }
+
+        .category-slide-list li {
+            font-size: 14px !important;
+            margin-bottom: 14px !important;
+            padding-left: 20px !important;
+            position: relative !important;
+            line-height: 1.6 !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-slide-list li {
+                font-size: 13px !important;
+                margin-bottom: 12px !important;
+                padding-left: 18px !important;
+                line-height: 1.5 !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-slide-list li {
+                font-size: 12px !important;
+                margin-bottom: 10px !important;
+                padding-left: 16px !important;
+                line-height: 1.4 !important;
+            }
+        }
+
+        .category-slide-list li:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        .category-slide-list.problems li {
+            color: #7F1D1D !important;
+        }
+
+        .category-slide-list.solution li {
+            color: #166534 !important;
+        }
+
+        .category-slide-list li::before {
+            content: "•" !important;
+            position: absolute !important;
+            left: 0 !important;
+            font-size: 16px !important;
+        }
+
+        .category-slide-list.problems li::before {
+            color: #EF4444 !important;
+        }
+
+        .category-slide-list.solution li::before {
+            color: #10B981 !important;
+        }
+
+        .category-slide-footer {
+            margin-top: auto !important;
+            margin-bottom: -8px !important;
+            padding: 20px 24px !important;
+            border-radius: 12px !important;
+            border-left: 3px solid !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-slide-footer {
+                padding: 18px 20px !important;
+                border-radius: 10px !important;
+                margin-bottom: -6px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-slide-footer {
+                padding: 16px 18px !important;
+                border-radius: 8px !important;
+                margin-bottom: -4px !important;
+            }
+        }
+
+        .category-slide-footer.problems {
+            background: #FEFAFA !important;
+            border-left-color: #EF4444 !important;
+        }
+
+        .category-slide-footer.solution {
+            background: #F9FEFB !important;
+            border-left-color: #10B981 !important;
+        }
+
+        .category-slide-footer p {
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            margin: 0 !important;
+            line-height: 1.5 !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-slide-footer p {
+                font-size: 12px !important;
+                line-height: 1.4 !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-slide-footer p {
+                font-size: 11px !important;
+                line-height: 1.3 !important;
+            }
+        }
+
+        .category-slide-footer.problems p {
+            color: #991B1B !important;
+        }
+
+        .category-slide-footer.solution p {
+            color: #14532D !important;
+        }
+
+        .category-slide-footer strong {
+            font-weight: 700 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+
+        /* Навигация */
+        .category-navigation {
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            gap: 12px !important;
+        }
+
+        .category-nav-button {
+            padding: 10px 16px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            letter-spacing: 0.02em !important;
+            text-decoration: none !important;
+            display: inline-block !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-nav-button {
+                padding: 8px 14px !important;
+                font-size: 11px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-nav-button {
+                padding: 8px 12px !important;
+                font-size: 10px !important;
+                border-radius: 8px !important;
+            }
+        }
+
+        .category-nav-button.active {
+            background: linear-gradient(135deg, #398D8D 0%, #4A9B9B 100%) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 8px rgba(57, 141, 141, 0.25) !important;
+            animation: pulseGlow 2s ease-in-out infinite !important;
+        }
+
+        .category-nav-button.inactive {
+            background: #F7F7F7 !important;
+            color: #9CA3AF !important;
+            opacity: 0.6 !important;
+        }
+
+        .category-nav-button.secondary {
+            background: #F7F7F7 !important;
+            color: #0C0C0C !important;
+            border: 1px solid #E5E7EB !important;
+        }
+
+        .category-nav-button.secondary:hover {
+            background: #E5E7EB !important;
+            color: #0C0C0C !important;
+        }
+
+        .category-nav-button.disabled {
+            background: #F7F7F7 !important;
+            color: #9CA3AF !important;
+            opacity: 0.6 !important;
+            pointer-events: none !important;
+        }
+
+        .category-nav-button.active:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(57, 141, 141, 0.3) !important;
+        }
+
+        .category-indicators {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 4px !important;
+        }
+
+        .category-indicator-dots {
+            display: flex !important;
+            gap: 6px !important;
+            padding: 6px 12px !important;
+            background-color: #F7F7F7 !important;
+            border-radius: 20px !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-indicator-dots {
+                gap: 5px !important;
+                padding: 5px 10px !important;
+                border-radius: 18px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-indicator-dots {
+                gap: 4px !important;
+                padding: 4px 8px !important;
+                border-radius: 16px !important;
+            }
+        }
+
+        .category-indicator-dot {
+            width: 8px !important;
+            height: 8px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            background: #E5E7EB !important;
+        }
+
+        .category-indicator-dot.active {
+            width: 24px !important;
+            background: linear-gradient(90deg, #398D8D 0%, #4A9B9B 100%) !important;
+        }
+
+        .category-indicator-text {
+            font-size: 9px !important;
+            color: #9CA3AF !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+        }
+
+        /* Планшетная адаптация */
+        @media (max-width: 1365px) {
+            .category-indicator-text {
+                font-size: 8px !important;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .category-indicator-text {
+                font-size: 8px !important;
+            }
+        }
+
+        /* Плейсхолдер */
+        .category-placeholder {
+            padding: 40px !important;
+            background-color: #F7F7F7 !important;
+            border-radius: 20px !important;
+            text-align: center !important;
+            border: 1px solid #E5E7EB !important;
+            animation: fadeInUp 0.4s ease-out !important;
+        }
+
+        .category-placeholder h3 {
+            font-size: 20px !important;
+            font-weight: 700 !important;
+            color: #0C0C0C !important;
+            margin-bottom: 12px !important;
+        }
+
+        .category-placeholder p {
+            font-size: 14px !important;
+            color: #6B7280 !important;
+            line-height: 1.5 !important;
+            max-width: 400px !important;
+            margin: 0 auto 24px !important;
+        }
+
+        .category-placeholder button {
+            padding: 12px 24px !important;
+            background: linear-gradient(135deg, #398D8D 0%, #4A9B9B 100%) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 3px 10px rgba(57, 141, 141, 0.3) !important;
+        }
+
+        .category-hidden {
+            display: none !important;
+        }
+
+        /* Мобильные устройства - следуем ТЗ */
+        @media (max-width: 784px) {
+            /* Основной контейнер на мобильных */
+            .tilda-category-widget {
+                max-width: 354px !important;
+                padding: 0 clamp(0.875rem, 4vw, 1rem) !important;
+            }
+            
+            .category-main-container {
+                min-height: auto !important;
+            }
+            
+            /* Мобильная структура - вертикальная */
+            .category-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                grid-template-columns: none !important;
+                min-height: auto !important;
+            }
+            
+            /* Левая панель превращается в селект */
+            .category-left-panel {
+                order: 1 !important;
+                border-right: none !important;
+                border-bottom: 1px solid #E5E7EB !important;
+                padding-top: 0 !important;
+            }
+            
+            .category-left-header {
+                height: auto !important;
+                padding: 16px 16px 8px !important;
+            }
+            
+            .category-left-title {
+                font-size: 12px !important;
+                margin-bottom: 0 !important;
+            }
+            
+            .category-left-subtitle {
+                display: none !important;
+            }
+            
+            /* Скрываем категории, показываем селект */
+            .category-list {
+                display: none !important;
+            }
+            
+            .category-mobile-select {
+                display: block !important;
+                padding: 8px 16px 16px !important;
+            }
+            
+            .category-select {
+                width: 100% !important;
+                padding: 12px 16px !important;
+                border: 2px solid #E5E7EB !important;
+                border-radius: 12px !important;
+                background: #FFFFFF !important;
+                font-size: 14px !important;
+                font-weight: 500 !important;
+                color: #0C0C0C !important;
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236B7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+                background-position: right 12px center !important;
+                background-repeat: no-repeat !important;
+                background-size: 16px !important;
+                min-height: 44px !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+                box-sizing: border-box !important;
+            }
+            
+            .category-select:focus {
+                outline: none !important;
+                border-color: #398D8D !important;
+                box-shadow: 0 0 0 3px rgba(57, 141, 141, 0.1) !important;
+            }
+            
+            /* Правая панель */
+            .category-right-panel {
+                order: 2 !important;
+                padding-top: 0 !important;
+            }
+            
+            .category-right-header {
+                height: auto !important;
+                padding: 12px 16px 0px !important;
+                background-color: #FFFFFF !important;
+                border-bottom: none !important;
+                position: relative !important;
+            }
+            
+            .category-service-title {
+                font-size: 12px !important;
+                margin-bottom: 12px !important;
+                text-align: left !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+            
+            /* Анимационный значок скролла - только на мобильных */
+            @media (max-width: 784px) {
+                .scroll-indicator {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 8px !important;
+                    opacity: 0.8 !important;
+                    color: #398D8D !important;
+                    font-size: 10px !important;
+                    font-weight: 600 !important;
+                    letter-spacing: 0.05em !important;
+                }
+                
+                .scroll-indicator-text {
+                    font-size: 10px !important;
+                    color: #398D8D !important;
+                    font-weight: 600 !important;
+                }
+                
+                .scroll-finger {
+                    width: 18px !important;
+                    height: 18px !important;
+                    animation: modernScrollMotion 2.5s ease-in-out infinite !important;
+                    filter: drop-shadow(0 2px 4px rgba(57, 141, 141, 0.2)) !important;
+                }
+                
+                @keyframes modernScrollMotion {
+                    0% { 
+                        transform: translateX(0px) scale(1); 
+                        opacity: 0.7; 
+                    }
+                    25% { 
+                        transform: translateX(3px) scale(1.05); 
+                        opacity: 0.9; 
+                    }
+                    50% { 
+                        transform: translateX(8px) scale(1.1); 
+                        opacity: 1; 
+                    }
+                    75% { 
+                        transform: translateX(3px) scale(1.05); 
+                        opacity: 0.9; 
+                    }
+                    100% { 
+                        transform: translateX(0px) scale(1); 
+                        opacity: 0.7; 
+                    }
+                }
+            }
+            
+            /* Горизонтальные табы в стилистике скриншота */
+            .category-service-buttons {
+                display: flex !important;
+                gap: 0 !important; /* БЕЗ пробелов между табами */
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                padding: 0 !important;
+                -webkit-overflow-scrolling: touch !important;
+                scrollbar-width: none !important;
+                scroll-behavior: smooth !important;
+                position: relative !important;
+                border-radius: 12px 12px 0 0 !important;
+                background: #F5F5F5 !important;
+                /* Табы на полную ширину как карточка */
+                width: 100% !important;
+            }
+            
+            .category-service-buttons::-webkit-scrollbar {
+                display: none !important;
+            }
+            
+            /* Градиент справа для показа что есть еще контент */
+            .category-service-buttons::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 0 !important;
+                right: 0 !important;
+                width: 40px !important;
+                height: 100% !important;
+                background: linear-gradient(to left, #F5F5F5 0%, rgba(245, 245, 245, 0.8) 50%, rgba(245, 245, 245, 0) 100%) !important;
+                pointer-events: none !important;
+                z-index: 10 !important;
+                border-radius: 0 12px 0 0 !important;
+                opacity: 0 !important;
+                transition: opacity 0.3s ease !important;
+            }
+            
+            /* Показываем градиент когда есть контент справа */
+            .category-service-buttons.has-more-content::before {
+                opacity: 1 !important;
+                background: linear-gradient(to left, 
+                    #F5F5F5 0%, 
+                    rgba(245, 245, 245, 0.95) 20%,
+                    rgba(57, 141, 141, 0.1) 80%, 
+                    rgba(57, 141, 141, 0) 100%) !important;
+                animation: subtlePulse 2s ease-in-out infinite !important;
+            }
+            
+            @keyframes subtlePulse {
+                0%, 100% { 
+                    opacity: 0.8; 
+                }
+                50% { 
+                    opacity: 1; 
+                }
+            }
+            
+            /* Прогресс-бар снизу табов */
+            .category-service-buttons::after {
+                content: '' !important;
+                position: absolute !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                height: 3px !important;
+                background: #398D8D !important;
+                border-radius: 0 0 12px 12px !important;
+            }
+            
+            .category-service-button {
+                font-size: 12px !important;
+                padding: 14px 20px !important;
+                min-height: 44px !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+                min-width: auto !important;
+                border-radius: 12px 12px 0 0 !important;
+                background: #F5F5F5 !important;
+                color: #6B7280 !important;
+                border: none !important;
+                font-weight: 500 !important;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                position: relative !important;
+                z-index: 2 !important;
+                overflow: hidden !important;
+            }
+            
+            /* Эффект ряби при нажатии */
+            .category-service-button::before {
+                content: '' !important;
+                position: absolute !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 0 !important;
+                height: 0 !important;
+                background: rgba(57, 141, 141, 0.2) !important;
+                border-radius: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                transition: width 0.4s ease, height 0.4s ease !important;
+                z-index: -1 !important;
+            }
+            
+            .category-service-button:active::before {
+                width: 200px !important;
+                height: 200px !important;
+            }
+            
+            .category-service-button.active {
+                background: #398D8D !important;
+                color: #FFFFFF !important;
+                font-weight: 600 !important;
+                box-shadow: 0 4px 12px rgba(57, 141, 141, 0.25) !important;
+                transform: translateY(-1px) !important;
+            }
+            
+            .category-service-button.active::before {
+                background: rgba(255, 255, 255, 0.1) !important;
+            }
+            
+            .category-service-button:hover:not(.active) {
+                background: #E5E7EB !important;
+                transform: translateY(-0.5px) !important;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            }
+            
+            /* Основной контент */
+            .category-main-content {
+                padding: 8px 16px 16px !important;
+                order: 3 !important;
+            }
+            
+            .category-slide-content {
+                margin-top: 0 !important;
+                margin-bottom: 12px !important;
+            }
+            
+            /* Единая высота для всех карточек - оптимальная для мобильных */
+            .category-slide-card {
+                min-height: 320px !important;
+                height: 320px !important;
+                padding: 16px !important;
+                margin: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            
+            .category-slide-header {
+                font-size: 16px !important;
+                margin-bottom: 12px !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .category-slide-list {
+                flex: 1 !important;
+                overflow-y: auto !important;
+            }
+            
+            .category-slide-list li {
+                font-size: 13px !important;
+                margin-bottom: 12px !important;
+                line-height: 1.5 !important;
+            }
+            
+            .category-slide-footer {
+                margin-top: auto !important;
+                padding: 12px 16px !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .category-slide-footer p {
+                font-size: 12px !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* Навигация на мобильных */
+            .category-navigation {
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                gap: 12px !important;
+                flex-wrap: nowrap !important;
+            }
+            
+            .category-nav-button {
+                min-height: 44px !important;
+                padding: 12px 16px !important;
+                font-size: 11px !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+                flex-shrink: 1 !important;
+                min-width: 0 !important;
+                white-space: nowrap !important;
+                text-align: center !important;
+            }
+            
+            .category-indicators {
+                order: 0 !important;
+                flex-shrink: 0 !important;
+            }
+            
+            .category-indicator-dots {
+                gap: 6px !important;
+                padding: 6px 12px !important;
+            }
+            
+            .category-indicator-dot {
+                width: 8px !important;
+                height: 8px !important;
+                min-height: auto !important;
+                touch-action: manipulation !important;
+            }
+            
+            .category-indicator-dot.active {
+                width: 24px !important;
+            }
+            
+            .category-indicator-text {
+                font-size: 9px !important;
+            }
+            
+            /* Плейсхолдер на мобильных */
+            .category-placeholder {
+                padding: 24px 16px !important;
+                min-height: 320px !important;
+                height: 320px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
+            
+            .category-placeholder h3 {
+                font-size: 18px !important;
+                margin-bottom: 16px !important;
+            }
+            
+            .category-placeholder p {
+                font-size: 13px !important;
+                margin-bottom: 24px !important;
+            }
+            
+            .category-placeholder button {
+                min-height: 44px !important;
+                padding: 14px 20px !important;
+                font-size: 12px !important;
+                touch-action: manipulation !important;
+                -webkit-tap-highlight-color: transparent !important;
+            }
+        }
+        
+        /* Скрытие мобильного селекта на десктопе */
+        @media (min-width: 785px) {
+            .category-mobile-select {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tilda-category-widget" id="nicheMatrix" data-gtm-interact="niche-matrix">
+        <div class="category-main-container">
+            <div class="category-grid">
+                <!-- Левая панель -->
+                <div class="category-left-panel">
+                    <div class="category-left-header">
+                        <h4 class="category-left-title">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            INDUSTRY CATEGORIES
+                        </h4>
+                        <p class="category-left-subtitle">Choose your industry</p>
+                    </div>
+                    
+                    <!-- Мобильный селект -->
+                    <div class="category-mobile-select">
+                        <select class="category-select" id="categorySelect">
+                            <option value="SaaS / Tech">SaaS / Tech</option>
+                            <option value="E-commerce">E-commerce</option>
+                            <option value="EdTech">EdTech</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Professional Services">Professional Services</option>
+                            <option value="Logistics & Manufacturing">Logistics & Manufacturing</option>
+                        </select>
+                    </div>
+                    
+                    <div class="category-list" id="categoryList">
+                        <div class="category-item active" data-category="SaaS / Tech">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="2" y="3" width="16" height="10"/>
+                                    <rect x="4" y="5" width="12" height="6" fill="rgba(255,255,255,0.2)"/>
+                                    <rect x="5" y="6" width="2" height="1"/>
+                                    <rect x="5" y="8" width="3" height="1"/>
+                                    <rect x="5" y="10" width="4" height="1"/>
+                                    <rect x="12" y="6" width="3" height="1"/>
+                                    <rect x="11" y="8" width="4" height="1"/>
+                                    <rect x="7" y="14" width="6" height="2"/>
+                                    <rect x="5" y="16" width="10" height="2"/>
+                                </svg>
+                            </span>
+                            <span>SaaS / Tech</span>
+                        </div>
+                        
+                        <div class="category-item" data-category="E-commerce">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="3" y="6" width="14" height="8" fill="none" stroke="currentColor" stroke-width="1"/>
+                                    <rect x="4" y="7" width="12" height="6" fill="rgba(255,255,255,0.1)"/>
+                                    <rect x="2" y="4" width="2" height="2"/>
+                                    <rect x="4" y="5" width="12" height="1"/>
+                                    <rect x="6" y="15" width="2" height="2"/>
+                                    <rect x="12" y="15" width="2" height="2"/>
+                                    <rect x="1" y="2" width="4" height="1"/>
+                                    <rect x="6" y="9" width="2" height="1"/>
+                                    <rect x="10" y="9" width="2" height="1"/>
+                                    <rect x="14" y="9" width="2" height="1"/>
+                                </svg>
+                            </span>
+                            <span>E-commerce</span>
+                        </div>
+                        
+                        <div class="category-item" data-category="EdTech">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="4" y="4" width="12" height="10"/>
+                                    <rect x="5" y="5" width="10" height="8" fill="rgba(255,255,255,0.2)"/>
+                                    <rect x="6" y="6" width="8" height="1"/>
+                                    <rect x="6" y="8" width="6" height="1"/>
+                                    <rect x="6" y="10" width="7" height="1"/>
+                                    <rect x="6" y="12" width="5" height="1"/>
+                                    <rect x="2" y="6" width="2" height="6"/>
+                                    <rect x="16" y="6" width="2" height="6"/>
+                                    <rect x="9" y="2" width="2" height="2"/>
+                                </svg>
+                            </span>
+                            <span>EdTech</span>
+                        </div>
+                        
+                        <div class="category-item" data-category="Real Estate">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="2" y="8" width="16" height="8"/>
+                                    <rect x="3" y="9" width="14" height="6" fill="rgba(255,255,255,0.1)"/>
+                                    <rect x="6" y="8" width="8" height="6"/>
+                                    <rect x="7" y="9" width="6" height="4" fill="rgba(255,255,255,0.2)"/>
+                                    <rect x="8" y="11" width="2" height="3"/>
+                                    <rect x="11" y="10" width="2" height="2"/>
+                                    <rect x="6" y="4" width="8" height="4"/>
+                                    <rect x="8" y="2" width="4" height="2"/>
+                                    <rect x="2" y="16" width="16" height="2"/>
+                                </svg>
+                            </span>
+                            <span>Real Estate</span>
+                        </div>
+                        
+                        <div class="category-item" data-category="Professional Services">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="2" y="8" width="4" height="6"/>
+                                    <rect x="14" y="8" width="4" height="6"/>
+                                    <rect x="6" y="10" width="8" height="2"/>
+                                    <rect x="5" y="9" width="2" height="1"/>
+                                    <rect x="13" y="9" width="2" height="1"/>
+                                    <rect x="4" y="7" width="2" height="1"/>
+                                    <rect x="14" y="7" width="2" height="1"/>
+                                    <rect x="7" y="8" width="6" height="1" fill="rgba(255,255,255,0.3)"/>
+                                    <rect x="8" y="12" width="4" height="1" fill="rgba(255,255,255,0.3)"/>
+                                </svg>
+                            </span>
+                            <span>Professional Services</span>
+                        </div>
+                        
+                        <div class="category-item" data-category="Logistics & Manufacturing">
+                            <span class="category-icon">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <rect x="2" y="8" width="10" height="6"/>
+                                    <rect x="3" y="9" width="8" height="4" fill="rgba(255,255,255,0.1)"/>
+                                    <rect x="12" y="10" width="6" height="4"/>
+                                    <rect x="13" y="11" width="4" height="2" fill="rgba(255,255,255,0.2)"/>
+                                    <rect x="4" y="15" width="2" height="2"/>
+                                    <rect x="14" y="15" width="2" height="2"/>
+                                    <rect x="12" y="6" width="4" height="4"/>
+                                    <rect x="5" y="10" width="2" height="1"/>
+                                    <rect x="8" y="10" width="2" height="1"/>
+                                </svg>
+                            </span>
+                            <span>Logistics & Manufacturing</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Правая панель -->
+                <div class="category-right-panel">
+                    <div class="category-right-header" id="rightHeader">
+                        <p class="category-service-title">SELECT SERVICE TYPE</p>
+                        <div class="category-service-buttons" id="serviceButtons">
+                            <!-- Динамически заполняется -->
+                        </div>
+                    </div>
+
+                    <div class="category-main-content" id="mainContent">
+                        <div class="category-slide-content" id="slideContent">
+                            <!-- Динамически заполняется -->
+                        </div>
+
+                        <div class="category-navigation" id="navigation">
+                            <!-- Динамически заполняется -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GTM/GA4 helper ---
+        function dl(eventName, params) {
+          try {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push(Object.assign({ event: eventName, screen: 'screen_niche_matrix' }, params || {}));
+          } catch (e) {
+            console && console.warn && console.warn('dataLayer push failed', e);
+          }
+        }
+
+        // Глобальные переменные для изоляции
+        window.TildaCategoryWidget = {
+            currentCategory: 'SaaS / Tech',
+            currentService: 'Customer Support',
+            currentSlide: 0,
+            
+            // --- Analytics hook (GTM/GA4) ---
+            _afterRender: function (slide) {
+              try {
+                var wrap = document.getElementById('nicheMatrix');
+                if (wrap) {
+                  wrap.setAttribute('data-matrix-category', this.currentCategory);
+                  wrap.setAttribute('data-matrix-service', this.currentService);
+                  wrap.setAttribute('data-matrix-slide-index', String(this.currentSlide + 1));
+                  wrap.setAttribute('data-matrix-slide-type', slide && slide.type ? slide.type : '');
+                }
+
+                // CTA: помечаем кнопку только когда на 2-м слайде («GET STARTED»)
+                var nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                  if (this.currentSlide === 1) {
+                    nextBtn.setAttribute('data-gtm-cta', 'matrix_get_started');
+                  } else {
+                    nextBtn.removeAttribute('data-gtm-cta');
+                  }
+                }
+                // CTA в плейсхолдере
+                var gsBtn = document.getElementById('getStartedBtn');
+                if (gsBtn) gsBtn.setAttribute('data-gtm-cta', 'matrix_get_started');
+
+                // Навигация — доп. трекинг (не меняем твою логику переходов)
+                var prevBtn = document.getElementById('prevBtn');
+                if (prevBtn && !prevBtn.dataset.gtmBound) {
+                  prevBtn.dataset.gtmBound = '1';
+                  prevBtn.addEventListener('click', () => {
+                    dl('matrix_nav_click', {
+                      action: 'prev',
+                      category: this.currentCategory,
+                      service: this.currentService,
+                      from_slide: this.currentSlide + 1
+                    });
+                  });
+                }
+
+                if (nextBtn && !nextBtn.dataset.gtmBound) {
+                  nextBtn.dataset.gtmBound = '1';
+                  nextBtn.addEventListener('click', () => {
+                    dl('matrix_nav_click', {
+                      action: (this.currentSlide === 1 ? 'get_started' : 'next'),
+                      category: this.currentCategory,
+                      service: this.currentService,
+                      from_slide: this.currentSlide + 1
+                    });
+                  });
+                }
+
+                var dots = document.querySelectorAll('.category-indicator-dot');
+                dots.forEach((dot, idx) => {
+                  if (!dot.dataset.gtmBound) {
+                    dot.dataset.gtmBound = '1';
+                    dot.addEventListener('click', () => {
+                      dl('matrix_nav_click', {
+                        action: 'dot',
+                        category: this.currentCategory,
+                        service: this.currentService,
+                        to_slide: idx + 1
+                      });
+                    });
+                  }
+                });
+
+                // Просмотр слайда
+                dl('matrix_slide_view', {
+                  category: this.currentCategory,
+                  service: this.currentService,
+                  slide_index: this.currentSlide + 1,
+                  slide_type: slide && slide.type ? slide.type : '',
+                  slide_title: slide && slide.title ? slide.title : ''
+                });
+              } catch (e) {
+                console && console.warn && console.warn('GTM hook error', e);
+              }
+            },
+            
+            // Данные категорий и услуг
+            categoriesData: {
+                'SaaS / Tech': ['Customer Support', 'Technical Help (Level 1)', 'Sales Development'],
+                'E-commerce': ['Customer Support', 'Data Processing/Back-office', 'Order Processing'],
+                'EdTech': ['Learner Support', 'Platform Help (Level 1)', 'Enrollment Advisors'],
+                'Real Estate': ['Tenant & Lead Support', 'Inside Sales Agents', 'Virtual Assistant'],
+                'Professional Services': ['Client Support', 'Back-Office Data', 'Virtual Assistant'],
+                'Logistics & Manufacturing': ['Customer Support', 'Technical Help (Level 1)', 'Back-Office Data']
+            },
+
+            renderLogisticsContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.logisticsContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering Logistics content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            renderProfessionalServicesContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.professionalServicesContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering Professional Services content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            renderRealEstateContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.realEstateContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering Real Estate content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            renderEdtechContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.edtechContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering EdTech content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            renderEcommerceContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.ecommerceContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering E-commerce content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            // Контент для SaaS / Tech
+            saasContent: {
+                'Customer Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Feature launch spikes tickets - "How do I...?" asked 50 times a day',
+                            'No late-night coverage - next-day answers frustrate users'
+                        ],
+                        fact: '63% of customer switch to competitors after one bad support experience - Zendesk 2025 CX trends'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'English-fluent support team, typing 65 words per minute',
+                            'Work in Zendesk, Freshdesk, Intercom, Slack, Google Workspace etc',
+                            '1-2 years experience of handling support and live chat'
+                        ],
+                        result: 'Reply in SLA-friendly time, keep 9 of 10 customers happy'
+                    }
+                ],
+                'Technical Help (Level 1)': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Developers fixing password resets instead of coding',
+                            'Simple bugs and browser issues waiting overnight',
+                            'Everything gets escalated to senior staff'
+                        ],
+                        fact: '20-30% of help-desk calls are just password resets/unlocks - The Gartner Group'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Tech-savvy English-fluent college grads for the basics',
+                            'Work in Jira, do screen-shares, follow your playbooks',
+                            '1-2 years Level-1 experience: logins, browser issues, basic connections errors'
+                        ],
+                        result: '7 of 10 issues resolved on the first contact; ~fix time under 4 hours'
+                    }
+                ],
+                'Sales Development': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Executives prospecting instead of closing',
+                            'Old lists: wrong emails, missing phones',
+                            'Pipeline runs dry every month'
+                        ],
+                        fact: 'Sales reps spending ~70% of time to non-selling tasks: admin, CRM updates, research - Salesforce 2024 Sales analytics'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Persistent callers with clear American English',
+                            'Work your HubSpot, LinkedIn, booking tools',
+                            '1-2 years B2B prospecting experience: cold calls, emails, booking demos'
+                        ],
+                        result: '40+ qualified meetings monthly, pay only for hours worked'
+                    }
+                ]
+            },
+
+            // Контент для E-commerce
+            ecommerceContent: {
+                'Customer Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            '"Where\'s my order?" floods every channel',
+                            'Instagram DMs, emails, chats - total chaos',
+                            'Late replies ruin product reviews'
+                        ],
+                        fact: 'One bad support tweet can halve ad ROI overnight'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Fluent English 65-wpm agents who maintain your brand voice',
+                            'Handle Gorgias / Zendesk, Shopify admin, email, chat, social',
+                            '1-2 years e-commerce support: returns, refunds, order tracking'
+                        ],
+                        result: '30-minute response across channels, 90% satisfaction guaranteed'
+                    }
+                ],
+                'Order Processing': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Orders missing the daily shipping cutoff',
+                            'Inventory doesn\'t match between store and marketplaces',
+                            'Fraud review takes hours; chargebacks rise'
+                        ],
+                        fact: '58% of consumers say they are unlikely to shop again with a retailer that misses promised delivery - Project44\'s report, 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Detail-minded college grads who work fast and carefully',
+                            'Verify orders, print labels, flag risky payments in ShipStation, Shopify/WooCommerce, Stripe',
+                            '1-2 years order processing experience - order entry, fulfillment coordination'
+                        ],
+                        result: '99% accurate picks, same-day shipping for 95% of in-stock orders'
+                    }
+                ],
+                'Data Processing/Back-office': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Thousands of prices, photos and tags need updates',
+                            'One typo = angry customer, lost sale',
+                            'Marketplaces reject listings for missing fields'
+                        ],
+                        fact: '45% of shoppers have returned an item due to incorrect online product contents - Salsify Consumer Research 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Data entry team - college grads with C1-English and 65+ wpm typing',
+                            'Update data in Excel/Google Sheets, Amazon Seller Central, Shopify bulk editor',
+                            '1-2 years back-office experience - catalog management, product uploads, data QA checks'
+                        ],
+                        result: '150 SKUs processed daily; 99.5% accuracy'
+                    }
+                ]
+            },
+
+            // Контент для EdTech
+            edtechContent: {
+                'Learner Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'New term = flood of login, billing and access issues',
+                            'Night chats unanswered - global students quit',
+                            'Sensitive student data requires careful handling'
+                        ],
+                        fact: '79% of online learners say tech issues affect their learning; 58% say support was insufficient - Collegis Education 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Patient C1-English helpers fluent in education terminology',
+                            'Work in Zendesk, Intercom, Canvas/Moodle, follow your guidelines',
+                            '1-2 years SaaS or e-learning help-desk experience'
+                        ],
+                        result: 'Tickets cleared before next class; ~90% student satisfaction maintained'
+                    }
+                ],
+                'Platform Help (Level 1)': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Browser or device issues stop online classes',
+                            'Many device types - hard to find simple fix',
+                            'Engineers distracted by easy tickets'
+                        ],
+                        fact: '4 hours downtime doubles refund risk'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Tech-savvy college-grads handling logins, browser/cache, basic device setup',
+                            'Use Jira, TeamViewer/AnyDesk & your knowledge base',
+                            '1-2 years Tier-1 support experience'
+                        ],
+                        result: 'Resolve 65% without escalation, ~4-hour average resolution'
+                    }
+                ],
+                'Enrollment Advisors': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Prospects waiting a day for callbacks',
+                            'Lost enrollments from slow first contact',
+                            'Small team can\'t follow up every inquiry fast enough'
+                        ],
+                        fact: 'Speed-to-lead still rules; contacting leads within 5 min makes them x21 more likely to convert - Chili Piper 2025 roundup'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Friendly, fluent English advisors with a helpful, consultative style',
+                            'Work in HubSpot/Salesforce, Calendly, Zoom',
+                            '1-2 years sales or support experience'
+                        ],
+                        result: '~15-minute first contact time; 8-12% lead-to-enrollment'
+                    }
+                ]
+            },
+
+            // Контент для Real Estate
+            realEstateContent: {
+                'Tenant & Lead Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Emergencies at midnight hit voicemail',
+                            'Slow repair updates hurt ratings and renewals',
+                            'Spring rush overwhelming your team'
+                        ],
+                        fact: 'In a 2024 secret-shopper study, ~47% of online property inquiries got no response - Mike DelPrete, 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Professional phone team with clear American accent',
+                            'Log and update tickets in AppFolio/Buildium or other CRMs',
+                            '1-2 years high-volume calls or property support'
+                        ],
+                        result: 'Answer 95% of calls in 4 rings, log tickets in minutes - not hours'
+                    }
+                ],
+                'Inside Sales Agents': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Web leads go cold after 24 hours',
+                            'Agents showing homes, not calling leads',
+                            'Paid leads wasted by slow response'
+                        ],
+                        fact: 'Speed-to-lead still rules; contacting leads within 5 min makes them x21 more likely to convert - Chili Piper 2025 roundup'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Neutral & clear English steady callers and fast note-takers',
+                            'Work in Follow Up Boss/HubSpot/Salesforce, Calendly/ShowingTime or other apps',
+                            '1-2 years outbound calling or appointment setting experience'
+                        ],
+                        result: '~5-min first contact on new leads; reliable cadence of booked showings monthly'
+                    }
+                ],
+                'Virtual Assistant': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'MLS uploads, contracts, calendars steal 10 hours a week',
+                            'Missed escrow dates risk deals',
+                            'Social media happening "whenever"'
+                        ],
+                        fact: 'Agents doing admin routine close 20% fewer homes'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Fluent English college grads, careful with details and deadlines',
+                            'Work in DocuSign, Trello/Asana, MLS portals, Canva, office & calendar apps',
+                            '1-2 years remote admin or support experience'
+                        ],
+                        result: '~95% tasks on-time; listings live in 24 hours; few missed deadlines'
+                    }
+                ]
+            },
+
+            // Контент для Professional Services
+            professionalServicesContent: {
+                'Client Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Missed calls = missed clients',
+                            'Basic intake questions clog partner time',
+                            'International clients in wrong time zone'
+                        ],
+                        fact: 'Clio\'s 2024 secret-shopper found only 40% of firms answered calls and 33% answered emails; 48% were unreachable by phone - Clio 2024 Legal Trends Report'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'English-fluent college grade team with business language experience',
+                            'Work in Zendesk, HubSpot and any other help desk, CRM or office apps',
+                            '1-2 years B2B support experience: handling inquiries and routing'
+                        ],
+                        result: '<1-hour response time; ~90% satisfaction; partners focus on billable work'
+                    }
+                ],
+                'Back-Office Data': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Invoices, docs indexing, CRM cleanup pile up',
+                            'Sheets errors causing audit nightmares',
+                            'Manual data entry stealing focus from strategy'
+                        ],
+                        fact: 'Knowledge workers spend ~53% time on busywork - Asana State of Work Innovation 2025 Report'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'English-fluent, college grade back-office team achieving 10k keystrokes/hr',
+                            'Work in DocuSign, any CRMs, office & data apps',
+                            '1-2 years high-volume data entry experience'
+                        ],
+                        result: '~99.8% accuracy; <24-hour turnaround'
+                    }
+                ],
+                'Virtual Assistant': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Calendar chaos eating 10 hours weekly',
+                            'Travel booking stealing focus time',
+                            'Important emails buried in inbox'
+                        ],
+                        fact: 'Executives spend 23% of time on admin tasks instead of strategy'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Proactive college grade assistants, English-fluent, 65+ wpm speed',
+                            'Work in Google Workspace, Office 365, Calendly, Asana & other apps',
+                            '1-2 years back-office or assistance experience'
+                        ],
+                        result: 'Inbox zero maintained, zero double-bookings, 95% tasks completed on-time'
+                    }
+                ]
+            },
+
+            // Контент для Logistics & Manufacturing
+            logisticsContent: {
+                'Customer Support': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            '"Where\'s my shipment?" calls after work hours',
+                            'Holiday volume crushing your team',
+                            'Multiple channels, no unified response'
+                        ],
+                        fact: '58% of consumers say they are unlikely to shop again with a retailer that misses promised delivery - Project44\'s report, 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'Fluent English, 65-wpm - fast college grade agents',
+                            'Work in your CRM & apps (Freshdesk/Zoho, RingCentral/Aircall, ShipStation, Google Workspace/MS 360…)',
+                            '1-2 years customer service or order processing experience'
+                        ],
+                        result: 'Fast first replies across channels; First try resolution raise = customers\' satisfaction raise'
+                    }
+                ],
+                'Technical Help (Level 1)': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Portal logins, label-printer and simple connection errors halting shipments',
+                            'Simple issues\' volumes get escalated to engineers',
+                            'Off-shift issues wait until morning'
+                        ],
+                        fact: 'Unplanned downtime costs manufacturers ~11% of annual revenues - Siemens "Trust Cost of Downtime" report, 2024'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'College grade, English-fluent first-line tech support for basic problems',
+                            'Work in TeamViewer/AnyDesk, Jira or other CRMs & apps',
+                            '1-2 years L1 support experience: login issues, basic troubleshooting'
+                        ],
+                        result: '65% resolved without escalation; average fix time under 4-hour'
+                    }
+                ],
+                'Back-Office Data': [
+                    {
+                        type: 'problems',
+                        title: 'Problems',
+                        items: [
+                            'Bill of lading errors delaying shipments',
+                            'Stock counts in spreadsheet drift',
+                            'Month-end audits and freight checks pile up'
+                        ],
+                        fact: 'Knowledge workers spend ~53% time on busywork - Asana State of Work Innovation 2025 Report'
+                    },
+                    {
+                        type: 'solution',
+                        title: 'Our Solution',
+                        items: [
+                            'English-fluent college grade back-office team with experience',
+                            'Work in Google Sheets/Excel, inventory apps, following your policies',
+                            '1-2 years back-office experience: invoices, inventory, data entry'
+                        ],
+                        result: '~99.5% accuracy; <12-hour turnaround'
+                    }
+                ]
+            },
+
+            // Методы
+            init: function() {
+                console.log('TildaCategoryWidget: Initializing...');
+                this.bindEvents();
+                
+                // Устанавливаем начальное значение мобильного селекта
+                var categorySelect = document.getElementById('categorySelect');
+                if (categorySelect) {
+                    categorySelect.value = this.currentCategory;
+                }
+                
+                this.updateServiceButtons();
+                this.updateContent();
+                console.log('TildaCategoryWidget: Initialized successfully');
+            },
+
+            bindEvents: function() {
+                var self = this;
+                
+                // Десктопные категории
+                var categoryItems = document.querySelectorAll('.category-item');
+                categoryItems.forEach(function(item) {
+                    item.addEventListener('click', function() {
+                        var category = this.getAttribute('data-category');
+                        if (category) {
+                            self.selectCategory(category);
+                        }
+                    });
+                });
+                
+                // Мобильный селект
+                var categorySelect = document.getElementById('categorySelect');
+                if (categorySelect) {
+                    categorySelect.addEventListener('change', function() {
+                        var category = this.value;
+                        if (category) {
+                            self.selectCategory(category);
+                        }
+                    });
+                }
+                
+                // Обновление при изменении размера экрана
+                window.addEventListener('resize', function() {
+                    self.updateServiceTitle();
+                    // Обновляем градиент при изменении размера экрана
+                    setTimeout(function() {
+                        if (window.innerWidth <= 784) {
+                            self.updateScrollGradient();
+                        }
+                    }, 100);
+                });
+            },
+
+            selectCategory: function(category) {
+                console.log('Selecting category:', category);
+                this.currentCategory = category;
+                this.currentService = this.categoriesData[category][0];
+                this.currentSlide = 0;
+                
+                // Обновляем активную категорию в десктопной версии
+                var items = document.querySelectorAll('.category-item');
+                items.forEach(function(item) {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-category') === category) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Обновляем мобильный селект
+                var categorySelect = document.getElementById('categorySelect');
+                if (categorySelect && categorySelect.value !== category) {
+                    categorySelect.value = category;
+                }
+                
+                this.updateServiceButtons();
+                this.updateContent();
+                
+                // Прокручиваем табы к началу на мобильных при смене категории
+                var self = this;
+                setTimeout(function() {
+                    if (window.innerWidth <= 784) {
+                        var serviceButtons = document.getElementById('serviceButtons');
+                        if (serviceButtons) {
+                            serviceButtons.scrollLeft = 0;
+                        }
+                        self.updateScrollGradient();
+                    }
+                }, 100);
+                
+                // GA4/GTM
+                dl('matrix_category_select', { category: category });
+                dl('matrix_service_select', { category: category, service: this.currentService, auto: true });
+            },
+
+            selectService: function(service) {
+                console.log('Selecting service:', service);
+                this.currentService = service;
+                this.currentSlide = 0;
+                this.updateContent();
+                
+                // GA4/GTM
+                dl('matrix_service_select', { category: this.currentCategory, service: service });
+            },
+
+            updateServiceTitle: function() {
+                var serviceTitle = document.querySelector('.category-service-title');
+                if (serviceTitle) {
+                    var isMobile = window.innerWidth <= 784;
+                    if (isMobile) {
+                        serviceTitle.innerHTML = 
+                            'SELECT SERVICE TYPE' +
+                            '<div class="scroll-indicator">' +
+                                '<span class="scroll-indicator-text">SWIPE</span>' +
+                                '<svg class="scroll-finger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+                                    '<path d="M9 18l6-6-6-6"/>' +
+                                '</svg>' +
+                            '</div>';
+                    } else {
+                        serviceTitle.innerHTML = 'SELECT SERVICE TYPE';
+                    }
+                }
+            },
+
+            updateServiceButtons: function() {
+                var serviceButtons = document.getElementById('serviceButtons');
+                var services = this.categoriesData[this.currentCategory];
+                var html = '';
+                var self = this;
+                
+                services.forEach(function(service) {
+                    var activeClass = service === self.currentService ? ' active' : '';
+                    html += '<button class="category-service-button' + activeClass + '" data-service="' + service + '">' + service + '</button>';
+                });
+                
+                serviceButtons.innerHTML = html;
+                
+                // Обновляем заголовок
+                this.updateServiceTitle();
+                
+                // Привязываем события к новым кнопкам
+                var buttons = serviceButtons.querySelectorAll('.category-service-button');
+                buttons.forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        // Убираем активный класс у всех кнопок
+                        buttons.forEach(function(btn) {
+                            btn.classList.remove('active');
+                        });
+                        // Добавляем активный класс к нажатой кнопке
+                        this.classList.add('active');
+                        
+                        var service = this.getAttribute('data-service');
+                        if (service) {
+                            self.selectService(service);
+                        }
+                        
+                        // Обновляем градиент после клика (с небольшой задержкой)
+                        if (window.innerWidth <= 784) {
+                            setTimeout(function() {
+                                self.updateScrollGradient();
+                            }, 100);
+                        }
+                    });
+                });
+                
+                // Добавляем обработчик скролла для градиента
+                if (window.innerWidth <= 784) {
+                    this.updateScrollGradient();
+                    serviceButtons.addEventListener('scroll', function() {
+                        self.updateScrollGradient();
+                    });
+                }
+            },
+
+            updateScrollGradient: function() {
+                var serviceButtons = document.getElementById('serviceButtons');
+                if (!serviceButtons) return;
+                
+                var scrollLeft = serviceButtons.scrollLeft;
+                var scrollWidth = serviceButtons.scrollWidth;
+                var clientWidth = serviceButtons.clientWidth;
+                var isScrollable = scrollWidth > clientWidth;
+                
+                // Градиент показываем только если:
+                // 1. Контент можно скроллить
+                // 2. Мы находимся в начальной позиции (scrollLeft близко к 0)
+                // 3. Есть контент справа
+                var isAtStart = scrollLeft <= 5; // Допустимая погрешность 5px
+                var hasContentRight = scrollLeft < (scrollWidth - clientWidth - 5);
+                
+                // Управляем видимостью градиента - показываем только в начальной позиции
+                if (isScrollable && isAtStart && hasContentRight) {
+                    serviceButtons.classList.add('has-more-content');
+                } else {
+                    serviceButtons.classList.remove('has-more-content');
+                }
+            },
+
+            updateContent: function() {
+                console.log('Updating content for:', this.currentCategory, this.currentService);
+                
+                if (this.currentCategory === 'SaaS / Tech' && this.saasContent[this.currentService]) {
+                    this.renderSaaSContent();
+                } else if (this.currentCategory === 'E-commerce' && this.ecommerceContent[this.currentService]) {
+                    this.renderEcommerceContent();
+                } else if (this.currentCategory === 'EdTech' && this.edtechContent[this.currentService]) {
+                    this.renderEdtechContent();
+                } else if (this.currentCategory === 'Real Estate' && this.realEstateContent[this.currentService]) {
+                    this.renderRealEstateContent();
+                } else if (this.currentCategory === 'Professional Services' && this.professionalServicesContent[this.currentService]) {
+                    this.renderProfessionalServicesContent();
+                } else if (this.currentCategory === 'Logistics & Manufacturing' && this.logisticsContent[this.currentService]) {
+                    this.renderLogisticsContent();
+                } else {
+                    this.renderPlaceholderContent();
+                }
+            },
+
+            renderSaaSContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var slides = this.saasContent[this.currentService];
+                var slide = slides[this.currentSlide];
+                
+                console.log('Rendering SaaS content:', slide);
+                
+                var iconSvg = slide.type === 'problems' ? 
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="9" y="3" width="1" height="1" fill="#000000"/><rect x="8" y="4" width="3" height="1" fill="#000000"/><rect x="7" y="5" width="5" height="1" fill="#000000"/><rect x="6" y="6" width="7" height="1" fill="#000000"/><rect x="5" y="7" width="9" height="1" fill="#000000"/><rect x="4" y="8" width="11" height="1" fill="#000000"/><rect x="3" y="9" width="13" height="1" fill="#000000"/><rect x="2" y="10" width="15" height="1" fill="#000000"/><rect x="1" y="11" width="17" height="1" fill="#000000"/><rect x="0" y="12" width="18" height="3" fill="#000000"/><rect x="9" y="4" width="1" height="1" fill="#FFD700"/><rect x="8" y="5" width="3" height="1" fill="#FFD700"/><rect x="7" y="6" width="5" height="1" fill="#FFD700"/><rect x="6" y="7" width="7" height="1" fill="#FFD700"/><rect x="5" y="8" width="9" height="1" fill="#FFD700"/><rect x="4" y="9" width="11" height="1" fill="#FFD700"/><rect x="3" y="10" width="13" height="1" fill="#FFD700"/><rect x="2" y="11" width="15" height="1" fill="#FFD700"/><rect x="1" y="12" width="17" height="2" fill="#FFD700"/><rect x="8" y="6" width="2" height="6" fill="#000000"/><rect x="8" y="13" width="2" height="2" fill="#000000"/></svg>' :
+                    '<svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" fill="#00C853"/><rect x="2" y="2" width="14" height="14" fill="#4CAF50"/><rect x="4" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="5" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="6" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="7" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="8" y="14" width="2" height="1" fill="#FFFFFF"/><rect x="9" y="13" width="2" height="1" fill="#FFFFFF"/><rect x="10" y="12" width="2" height="1" fill="#FFFFFF"/><rect x="11" y="11" width="2" height="1" fill="#FFFFFF"/><rect x="12" y="10" width="2" height="1" fill="#FFFFFF"/><rect x="13" y="9" width="2" height="1" fill="#FFFFFF"/><rect x="14" y="8" width="2" height="1" fill="#FFFFFF"/><rect x="15" y="7" width="2" height="1" fill="#FFFFFF"/></svg>';
+                
+                var itemsHtml = slide.items.map(function(item) {
+                    return '<li>' + item + '</li>';
+                }).join('');
+                
+                var factOrResult = slide.type === 'problems' ? slide.fact : slide.result;
+                var factLabel = slide.type === 'problems' ? 'Industry Fact:' : 'Result:';
+                
+                // Плашка с ценой для solution слайдов
+                var priceBadge = slide.type === 'solution' ? '<div class="category-price-badge">$11/hr</div>' : '';
+                
+                slideContent.innerHTML = 
+                    '<div class="category-slide-card ' + slide.type + '">' +
+                        priceBadge +
+                        '<h4 class="category-slide-header ' + slide.type + '">' +
+                            '<span class="category-slide-icon">' + iconSvg + '</span>' +
+                            slide.title +
+                        '</h4>' +
+                        '<ul class="category-slide-list ' + slide.type + '">' +
+                            itemsHtml +
+                        '</ul>' +
+                        '<div class="category-slide-footer ' + slide.type + '">' +
+                            '<p>' +
+                                '<strong>' +
+                                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+                                        (slide.type === 'problems' ? '<path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/>' : '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>') +
+                                    '</svg>' +
+                                    factLabel +
+                                '</strong>' +
+                                ' ' + factOrResult +
+                            '</p>' +
+                        '</div>' +
+                    '</div>';
+                
+                // Обновляем навигацию
+                var isFirstSlide = this.currentSlide === 0;
+                var isLastSlide = this.currentSlide === 1;
+                var self = this;
+                var isMobile = window.innerWidth <= 784;
+                
+                var prevBtnText = isMobile ? 'PROBLEMS' : '← PROBLEMS';
+                var nextBtnText = isLastSlide ? (isMobile ? 'GET STARTED' : 'GET STARTED →') : (isMobile ? 'SOLUTION' : 'SOLUTION →');
+                
+                navigation.innerHTML = 
+                    '<button class="category-nav-button ' + (isFirstSlide ? 'disabled' : 'secondary') + '" id="prevBtn">' + prevBtnText + '</button>' +
+                    '<div class="category-indicators">' +
+                        '<div class="category-indicator-dots">' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 0 ? 'active' : '') + '" data-slide="0"></button>' +
+                            '<button class="category-indicator-dot ' + (this.currentSlide === 1 ? 'active' : '') + '" data-slide="1"></button>' +
+                        '</div>' +
+                        '<span class="category-indicator-text">' + (this.currentSlide + 1) + ' of 2</span>' +
+                    '</div>' +
+                    '<button class="category-nav-button active" id="nextBtn">' + nextBtnText + '</button>';
+                
+                // Привязываем события к кнопкам навигации
+                var prevBtn = document.getElementById('prevBtn');
+                var nextBtn = document.getElementById('nextBtn');
+                var dots = navigation.querySelectorAll('.category-indicator-dot');
+                
+                if (!isFirstSlide) {
+                    prevBtn.addEventListener('click', function() {
+                        self.prevSlide();
+                    });
+                }
+                
+                nextBtn.addEventListener('click', function() {
+                    if (isLastSlide) {
+                        self.getStarted();
+                    } else {
+                        self.nextSlide();
+                    }
+                });
+                
+                dots.forEach(function(dot) {
+                    dot.addEventListener('click', function() {
+                        var slide = parseInt(this.getAttribute('data-slide'));
+                        if (!isNaN(slide)) {
+                            self.goToSlide(slide);
+                        }
+                    });
+                });
+                
+                this._afterRender(slide);
+            },
+
+            renderPlaceholderContent: function() {
+                var slideContent = document.getElementById('slideContent');
+                var navigation = document.getElementById('navigation');
+                var self = this;
+                
+                slideContent.innerHTML = 
+                    '<div class="category-placeholder">' +
+                        '<h3>' + this.currentCategory + ' Solutions</h3>' +
+                        '<p>Professional ' + this.currentService.toLowerCase() + ' services tailored for ' + this.currentCategory.toLowerCase() + ' industry.</p>' +
+                        '<button id="getStartedBtn">CALCULATE SAVINGS</button>' +
+                    '</div>';
+                
+                navigation.innerHTML = '';
+                
+                // Привязываем событие к кнопке
+                var getStartedBtn = document.getElementById('getStartedBtn');
+                if (getStartedBtn) {
+                    getStartedBtn.addEventListener('click', function() {
+                        self.getStarted();
+                    });
+                }
+                
+                this._afterRender({ type: 'placeholder', title: 'Placeholder' });
+            },
+
+            nextSlide: function() {
+                if (this.currentSlide < 1) {
+                    this.currentSlide++;
+                    this.renderCurrentContent();
+                }
+            },
+
+            prevSlide: function() {
+                if (this.currentSlide > 0) {
+                    this.currentSlide--;
+                    this.renderCurrentContent();
+                }
+            },
+
+            goToSlide: function(slide) {
+                this.currentSlide = slide;
+                this.renderCurrentContent();
+            },
+
+            renderCurrentContent: function() {
+                if (this.currentCategory === 'SaaS / Tech' && this.saasContent[this.currentService]) {
+                    this.renderSaaSContent();
+                } else if (this.currentCategory === 'E-commerce' && this.ecommerceContent[this.currentService]) {
+                    this.renderEcommerceContent();
+                } else if (this.currentCategory === 'EdTech' && this.edtechContent[this.currentService]) {
+                    this.renderEdtechContent();
+                } else if (this.currentCategory === 'Real Estate' && this.realEstateContent[this.currentService]) {
+                    this.renderRealEstateContent();
+                } else if (this.currentCategory === 'Professional Services' && this.professionalServicesContent[this.currentService]) {
+                    this.renderProfessionalServicesContent();
+                } else if (this.currentCategory === 'Logistics & Manufacturing' && this.logisticsContent[this.currentService]) {
+                    this.renderLogisticsContent();
+                }
+            },
+
+            getStarted: function() {
+                dl('matrix_get_started', { category: this.currentCategory, service: this.currentService });
+                console.log('GET STARTED clicked!');
+                
+                // Добавляем задержку для Tilda
+                setTimeout(function() {
+                    // Открываем попап Tilda с ID "nextstep"
+                    var success = window.TildaCategoryWidget.openTildaPopup('nextstep');
+                    
+                    if (!success) {
+                        console.log('🔄 Основной метод не сработал, пробуем альтернативы...');
+                        
+                        // Альтернативные попытки
+                        setTimeout(function() { 
+                            window.TildaCategoryWidget.openTildaPopup('nextstep'); 
+                        }, 500);
+                        setTimeout(function() { 
+                            // Попробуем просто перейти по ссылке
+                            window.location.href = '#nextstep';
+                        }, 1000);
+                    }
+                    
+                }, 200);
+                
+                // Дополнительно отправляем цель в метрику (если нужно)
+                if (typeof yaCounter !== 'undefined') {
+                    yaCounter.reachGoal('category_widget_started');
+                    console.log('📊 Цель Яндекс.Метрики отправлена');
+                }
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'category_widget_started', {
+                        'event_category': 'engagement',
+                        'event_label': 'category_selector'
+                    });
+                    console.log('📊 Событие Google Analytics отправлено');
+                }
+            },
+
+            // Функция для открытия попапа в Tilda с отладкой
+            openTildaPopup: function(popupId) {
+                console.log('🔍 Попытка открыть попап с ID:', popupId);
+                
+                try {
+                    // Метод 1: Поиск существующего триггера
+                    var existingTrigger = document.querySelector('[href="#popup:' + popupId + '"]');
+                    console.log('🔗 Найден существующий триггер:', existingTrigger);
+                    
+                    if (existingTrigger) {
+                        console.log('✅ Кликаем по существующему триггеру');
+                        existingTrigger.click();
+                        return true;
+                    }
+                    
+                    // Метод 2: Поиск триггера по хэштегу без popup:
+                    var hashTrigger = document.querySelector('[href="#' + popupId + '"]');
+                    console.log('🔗 Найден хэш-триггер:', hashTrigger);
+                    
+                    if (hashTrigger) {
+                        console.log('✅ Кликаем по хэш-триггеру');
+                        hashTrigger.click();
+                        return true;
+                    }
+                    
+                    // Метод 3: Создание временного триггера
+                    console.log('🔧 Создаем временный триггер');
+                    var tempTrigger = document.createElement('a');
+                    tempTrigger.href = '#popup:' + popupId;
+                    tempTrigger.style.display = 'none';
+                    tempTrigger.style.visibility = 'hidden';
+                    tempTrigger.style.position = 'absolute';
+                    tempTrigger.style.left = '-9999px';
+                    tempTrigger.className = 'temp-popup-trigger';
+                    
+                    // Пробуем добавить в разные места
+                    var targetElement = document.body || document.documentElement;
+                    targetElement.appendChild(tempTrigger);
+                    console.log('📍 Триггер добавлен в:', targetElement.tagName);
+                    
+                    // Кликаем с задержкой
+                    setTimeout(function() {
+                        console.log('🖱️ Кликаем по временному триггеру');
+                        tempTrigger.click();
+                        
+                        // Удаляем элемент
+                        setTimeout(function() {
+                            if (targetElement.contains(tempTrigger)) {
+                                targetElement.removeChild(tempTrigger);
+                                console.log('🗑️ Временный триггер удален');
+                            }
+                        }, 300);
+                    }, 100);
+                    
+                    return true;
+                } catch (error) {
+                    console.error('❌ Ошибка при открытии попапа:', error);
+                    
+                    // Fallback методы
+                    console.log('🔄 Пробуем fallback методы...');
+                    
+                    // Метод 4: Прямой переход по хэштегу
+                    try {
+                        window.location.hash = 'popup:' + popupId;
+                        console.log('✅ Установлен хэш:', window.location.hash);
+                    } catch (e) {
+                        console.error('❌ Ошибка установки хэша:', e);
+                    }
+                    
+                    // Метод 5: Проверка jQuery и использование
+                    if (typeof $ !== 'undefined') {
+                        console.log('📚 jQuery доступен, пробуем через jQuery');
+                        try {
+                            $('[href="#popup:' + popupId + '"], [href="#' + popupId + '"]').first().trigger('click');
+                        } catch (jqError) {
+                            console.error('❌ jQuery метод не сработал:', jqError);
+                        }
+                    }
+                    
+                    return false;
+                }
+            }
+        };
+
+        // Инициализация после загрузки DOM
+        function initTildaCategoryWidget() {
+            if (window.TildaCategoryWidget) {
+                window.TildaCategoryWidget.init();
+            }
+        }
+
+        // Множественная проверка готовности документа для надежности в Tilda
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTildaCategoryWidget);
+        } else {
+            initTildaCategoryWidget();
+        }
+
+        // Дополнительная инициализация с задержкой для Tilda
+        setTimeout(function() {
+            if (window.TildaCategoryWidget && !window.TildaCategoryWidget.initialized) {
+                initTildaCategoryWidget();
+                window.TildaCategoryWidget.initialized = true;
+                
+                // Дополнительная проверка доступности элементов Tilda
+                console.log('🔍 Проверяем доступность элементов Tilda...');
+                
+                // Ищем любые попапы на странице для отладки
+                var allPopups = document.querySelectorAll('.t-popup, [class*="popup"]');
+                console.log('📋 Найдено попапов на странице:', allPopups.length);
+                allPopups.forEach(function(popup, index) {
+                    console.log('Попап ' + (index + 1) + ':', popup);
+                });
+                
+                // Ищем все ссылки с хэштегами
+                var allHashLinks = document.querySelectorAll('[href*="#"]');
+                console.log('🔗 Найдено ссылок с хэштегами:', allHashLinks.length);
+                allHashLinks.forEach(function(link, index) {
+                    if (link.href.includes('popup') || link.href.includes('nextstep')) {
+                        console.log('Релевантная ссылка ' + (index + 1) + ':', link.href);
+                    }
+                });
+            }
+        }, 1500); // Увеличенная задержка для Tilda
+
+        // Еще одна попытка через секунду
+        setTimeout(function() {
+            if (window.TildaCategoryWidget && !window.TildaCategoryWidget.initialized) {
+                initTildaCategoryWidget();
+                window.TildaCategoryWidget.initialized = true;
+            }
+        }, 2000);
+
+        // Дополнительная инициализация при полной загрузке страницы
+        window.addEventListener('load', function() {
+            console.log('🎉 Страница полностью загружена');
+            
+            // Еще одна проверка через 2 секунды после загрузки
+            setTimeout(function() {
+                console.log('🔄 Финальная проверка готовности Tilda...');
+                
+                // Проверяем, есть ли функции Tilda в глобальной области
+                if (typeof window.t390_closePopup !== 'undefined') {
+                    console.log('✅ Tilda API частично доступно');
+                } else {
+                    console.log('⚠️ Tilda API не обнаружено');
+                }
+                
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,3100 @@
+<link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* CSS Variables for easy customization */
+  :root {
+    /* Global brand + accent palette */
+    --brand-color: #cc6633;
+    --brand-rgb: 204, 102, 51;
+    --accent-color: #00FF64;
+    --accent-rgb: 0, 255, 100;
+
+    --crt-bg-inner: #1A2E1A;
+    --crt-bg-mid: #0D1B0D;
+    --crt-bg-outer: #000000;
+
+    /* Convenience aliases (legacy usage) */
+    --primary-color: var(--brand-color);
+    --primary-rgb: var(--brand-rgb);
+
+    --secondary-color: #b3562a;
+    --secondary-light: #e38a58;
+    --error-color: #FF4444;
+    --bg-dark: #1F2937;
+    --text-dark: #374151;
+    --text-gray: #6B7280;
+    --border-gray: rgba(220, 215, 205, 0.4);
+    --bg-light: rgba(255, 255, 255, 0.85);
+    --bg-page: #f8f7f4;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --frame-border: rgba(var(--brand-rgb), 0.25);
+    --btn-bg: rgba(var(--brand-rgb), 0.10);
+    --btn-bg-hover: rgba(var(--brand-rgb), 0.14);
+    --btn-bg-active: rgba(var(--brand-rgb), 0.18);
+  }
+
+  /* Main container - responsive */
+  .journey-wrapper {
+    width: 100%;
+    max-width: 977px;
+    height: 580px;
+    background-color: var(--bg-page);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--frame-border);
+    margin: 0 auto;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    color: var(--text-dark);
+  }
+
+  /* Large monitors (2K and above) - keep more reasonable sizes */
+  @media (min-width: 1920px) {
+    .journey-wrapper {
+      max-width: 1000px;
+      height: 600px;
+      border-radius: 1.5rem;
+    }
+  }
+
+  /* 4K monitors - don't scale too aggressively */
+  @media (min-width: 2560px) {
+    .journey-wrapper {
+      max-width: 1100px;
+      height: 650px;
+      border-radius: 1.75rem;
+    }
+  }
+
+  /* Tablet breakpoint */
+  @media (max-width: 1365px) {
+    .journey-wrapper {
+      max-width: 730px;
+      height: 580px;
+      border-radius: 1rem;
+    }
+  }
+
+  /* Medium tablet breakpoint for smaller heights */
+  @media (max-width: 1000px) {
+    .journey-wrapper {
+      height: 520px;
+    }
+  }
+
+  /* Mobile breakpoint */
+  @media (max-width: 784px) {
+    .journey-wrapper {
+      max-width: 354px;
+      height: 520px;
+      border-radius: 0.75rem;
+    }
+  }
+
+  /* Progress Bar */
+  .progress-bar-container {
+    height: 0.375rem;
+    background-color: var(--border-gray);
+    position: relative;
+    width: 100%;
+    margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background-color: var(--brand-color);
+    transition: all 0.5s ease-out;
+    animation: slideProgress 0.5s ease-out;
+  }
+
+  .bottom-section > .progress-bar-container {
+    margin: clamp(0.2rem, 0.6vw, 0.4rem) 0;
+  }
+
+  /* Navigation Pills Container */
+  .nav-pills-container {
+    padding: clamp(0.75rem, 1.5vw, 1.25rem);
+    background-color: var(--bg-page);
+    border-bottom: 1px solid var(--border-gray);
+    height: clamp(60px, 10vw, 70px);
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  /* Large monitors adjustments - keep nav smaller */
+  @media (min-width: 1920px) {
+    .nav-pills-container {
+      height: 65px;
+      padding: 1rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .nav-pills-container {
+      height: 70px;
+      padding: 1.125rem;
+    }
+  }
+
+  /* Mobile adjustments for nav pills */
+  @media (max-width: 784px) {
+    .nav-pills-container {
+      display: none;
+    }
+  }
+
+  .nav-pills-container::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .nav-pills-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .nav-pills-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+  }
+
+  .nav-pills {
+    display: flex;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  .nav-pill {
+    flex: 1;
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+    font-weight: 500;
+    transition: all 0.3s;
+    text-align: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    background-color: transparent;
+    color: var(--text-gray);
+  }
+
+  /* Large monitors nav pill adjustments - keep reasonable sizes */
+  @media (min-width: 1920px) {
+    .nav-pill {
+      font-size: 0.8rem;
+      padding: 0.75rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .nav-pill {
+      font-size: 0.85rem;
+      padding: 0.875rem;
+    }
+  }
+
+  /* Mobile adjustments for nav pills */
+  @media (max-width: 784px) {
+    .nav-pill {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.6rem;
+    }
+  }
+
+  .nav-pill:first-child {
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  .nav-pill:last-child {
+    border-radius: 0 1rem 1rem 0;
+  }
+
+  .nav-pill.active {
+    background-color: var(--btn-bg);
+    color: var(--brand-color);
+    border-color: rgba(var(--brand-rgb), 0.35);
+    box-shadow: none;
+  }
+
+  .nav-pill:not(.active) {
+    background-color: #ffffff;
+    border-color: var(--border-gray);
+  }
+
+  .nav-pill:not(.active):hover {
+    background-color: rgba(var(--brand-rgb), 0.06);
+    border-color: rgba(var(--brand-rgb), 0.25);
+    color: var(--text-dark);
+  }
+
+  .nav-pill.active:hover {
+    background-color: var(--btn-bg-hover);
+  }
+
+  /* Main Content Area */
+  .main-content {
+    padding: 0 clamp(1.5rem, 3vw, 2.5rem) clamp(0.75rem, 1.5vw, 1rem);
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 6px - clamp(58px, 8vw, 64px));
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* Large monitors main content adjustments - match new nav heights */
+  @media (min-width: 1920px) {
+    .main-content {
+      height: calc(100% - 6px - 64px);
+      padding: 0 2rem 0.5rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .main-content {
+      height: calc(100% - 6px - 64px);
+      padding: 0 2.5rem 0.625rem;
+    }
+  }
+
+  /* Mobile adjustments for main content */
+  @media (max-width: 784px) {
+    .main-content {
+      padding: 0 1rem 0.375rem;
+      height: calc(100% - 6px);
+    }
+  }
+
+  .content-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto;
+    animation: fadeInSlide 0.6s ease-out;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Top Section - Heading */
+  .top-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
+
+  /* Mobile adjustments for top section */
+  @media (max-width: 784px) {
+    .top-section {
+      height: calc(18px * 1.4 * 3 + 0.5rem);
+      min-height: calc(18px * 1.4 * 3 + 0.5rem);
+      justify-content: flex-start;
+    }
+
+    .heading {
+      padding: 0 clamp(0.5rem, 1vw, 1rem);
+      margin: 1rem 0 0 0;
+    }
+  }
+
+  .heading {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-dark);
+    line-height: 1.4;
+    letter-spacing: -0.025em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem clamp(0.5rem, 1vw, 1rem) 0;
+    overflow: hidden;
+  }
+
+
+  /* Large monitors heading adjustments - more conservative */
+  @media (min-width: 1920px) {
+    .heading {
+      font-size: 18px;
+      line-height: 1.3;
+      padding: 0 1rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .heading {
+      font-size: 18px;
+      line-height: 1.25;
+      padding: 0 1.25rem;
+    }
+  }
+
+  /* Mobile adjustments for heading */
+  @media (max-width: 784px) {
+    .heading {
+      font-size: 18px;
+      line-height: 1.2;
+      padding: 0 0.5rem;
+      font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    }
+  }
+
+  /* Middle Section - CRT Monitor */
+  .middle-section {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.25rem, 0.5vw, 0.5rem) 0;
+  }
+
+  /* Mobile adjustments for middle section */
+  @media (max-width: 784px) {
+    .middle-section {
+      padding: 0;
+      margin-bottom: 0;
+    }
+
+    .monitor-wrapper {
+      padding: 0;
+      margin: -0.5rem 0 -0.5rem 0;
+      align-items: flex-start;
+    }
+
+    .monitor-outer {
+      margin-bottom: 0;
+    }
+  }
+
+  .monitor-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .monitor-outer {
+    background-color: var(--bg-dark);
+    padding: clamp(0.5rem, 1vw, 1rem);
+    border-radius: clamp(0.5rem, 1vw, 1rem);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+  }
+
+  /* Mobile adjustments for monitor */
+  @media (max-width: 784px) {
+    .monitor-outer {
+      padding: 0.5rem;
+    }
+  }
+
+  .monitor-bezel {
+    background: linear-gradient(to bottom right, #374151, #1F2937, #111827);
+    padding: clamp(0.375rem, 0.75vw, 0.75rem);
+    border-radius: clamp(0.375rem, 0.75vw, 0.75rem);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  /* Mobile adjustments for monitor bezel */
+  @media (max-width: 784px) {
+    .monitor-bezel {
+      padding: 0.375rem;
+    }
+  }
+
+  /* CRT Screen - Responsive sizes */
+  .crt-screen {
+    border-radius: clamp(0.5rem, 1vw, 1rem);
+    padding: clamp(0.5rem, 1vw, 1rem);
+    position: relative;
+    overflow: hidden;
+    width: 550px;
+    height: 290px;
+    background: 
+      radial-gradient(ellipse at center, var(--crt-bg-inner) 0%, var(--crt-bg-mid) 70%, var(--crt-bg-outer) 100%),
+      linear-gradient(180deg, var(--crt-bg-mid) 0%, var(--crt-bg-inner) 50%, var(--crt-bg-mid) 100%);
+    box-shadow: 
+      inset 0 0 30px rgba(0,0,0,0.8),
+      inset 0 0 60px rgba(0,0,0,0.4),
+      0 0 20px rgba(var(--primary-rgb),0.1);
+    transform: perspective(1000px) rotateX(2deg);
+  }
+
+  /* Inside the CRT we switch tokens to neon accent */
+  .monitor-outer,
+  .crt-screen,
+  .crt-screen * {
+    --primary-color: var(--accent-color);
+    --primary-rgb: var(--accent-rgb);
+  }
+
+  /* Large monitors CRT sizes - more reasonable */
+  @media (min-width: 1920px) {
+    .crt-screen {
+      width: 520px;
+      height: 260px;
+      padding: 1rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .crt-screen {
+      width: 580px;
+      height: 290px;
+      padding: 1.125rem;
+    }
+  }
+
+  /* Tablet CRT size */
+  @media (max-width: 1365px) {
+    .crt-screen {
+      width: 420px;
+      height: 210px;
+    }
+  }
+
+  /* Mobile CRT size */
+  @media (max-width: 784px) {
+    .crt-screen {
+      width: 300px;
+      height: 280px;
+      padding: 0.5rem;
+    }
+  }
+
+  .scanlines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(var(--primary-rgb), 0.02) 3px,
+      rgba(var(--primary-rgb), 0.02) 6px
+    );
+  }
+
+  .screen-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    background: radial-gradient(ellipse at center, rgba(var(--primary-rgb), 0.08) 0%, transparent 70%);
+  }
+
+  .screen-content {
+    position: relative;
+    z-index: 6;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .crt-reflection {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 60%;
+    height: 33.333333%;
+    border-radius: 0.25rem;
+    pointer-events: none;
+    z-index: 15;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+  }
+
+  /* Mobile adjustments for crt-reflection */
+  @media (max-width: 767px) {
+    .crt-reflection {
+      top: 0.25rem;
+      left: 0.25rem;
+      right: 55%;
+      height: 30%;
+    }
+  }
+
+  /* Mobile adjustments for CRT screen padding */
+  @media (max-width: 784px) {
+    .crt-screen {
+      padding: 0 0.5rem;
+    }
+  }
+
+  .power-indicator {
+    position: absolute;
+    bottom: clamp(0.25rem, 0.5vw, 0.5rem);
+    right: clamp(0.75rem, 1.25vw, 1.25rem);
+    width: clamp(0.375rem, 0.5vw, 0.5rem);
+    height: clamp(0.375rem, 0.5vw, 0.5rem);
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Mobile adjustments for power indicator */
+  @media (max-width: 767px) {
+    .power-indicator {
+      bottom: 0.25rem;
+      right: 0.5rem;
+      width: 0.375rem;
+      height: 0.375rem;
+    }
+  }
+
+  /* Bottom Section - Navigation */
+  .bottom-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.25rem, 0.7vw, 0.35rem);
+    flex: 0 0 auto;
+    height: clamp(58px, 8vw, 64px);
+    min-height: 58px;
+    padding-top: clamp(0.15rem, 0.35vw, 0.35rem);
+  }
+
+  .bottom-section.progress-bottom-active {
+    height: auto;
+    min-height: clamp(72px, 9vw, 96px);
+    padding-top: clamp(0.3rem, 0.6vw, 0.5rem);
+  }
+
+  /* Large monitors navigation adjustments - MUCH smaller */
+  @media (min-width: 1920px) {
+    .bottom-section {
+      height: 64px;
+      min-height: 64px;
+      gap: 0.3rem;
+      padding-top: 0.3rem;
+    }
+
+    .bottom-section.progress-bottom-active {
+      height: auto;
+      min-height: clamp(72px, 6vw, 96px);
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .bottom-section {
+      height: 64px;
+      min-height: 64px;
+      gap: 0.3rem;
+      padding-top: 0.3rem;
+    }
+
+    .bottom-section.progress-bottom-active {
+      height: auto;
+      min-height: clamp(80px, 5vw, 120px);
+    }
+  }
+
+  /* Tablet adjustments for bottom section */
+  @media (max-width: 1365px) and (min-width: 785px) {
+    .bottom-section {
+      height: 58px;
+      min-height: 58px;
+      gap: 0.25rem;
+      padding-top: 0.25rem;
+    }
+    
+    .bottom-section.progress-bottom-active {
+      height: auto;
+      min-height: clamp(72px, 10vw, 110px);
+    }
+
+    .nav-buttons {
+      height: 2.3rem;
+      gap: 0.7rem;
+    }
+  }
+
+  /* Mobile adjustments for bottom section */
+  @media (max-width: 784px) {
+    .bottom-section {
+      height: 58px;
+      min-height: 58px;
+      gap: 0.2rem;
+      padding-top: 0.25rem;
+    }
+  }
+
+  /* Nav buttons height adjustments - keep smaller on large screens */
+  .nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.45rem, 0.9vw, 0.875rem);
+    height: clamp(2.1rem, 3.8vw, 2.35rem);
+    flex-shrink: 0;
+  }
+
+  /* Mobile adjustments for nav buttons */
+  @media (max-width: 784px) {
+    .nav-buttons {
+      height: 2.25rem;
+      gap: 0.6rem;
+    }
+  }
+
+  .btn-prev {
+    padding: clamp(0.375rem, 0.75vw, 0.5rem) clamp(0.75rem, 1.5vw, 1rem);
+    background-color: #ffffff;
+    color: var(--text-dark);
+    border: 1px solid var(--border-gray);
+    border-radius: 0.5rem;
+    font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+    font-weight: 600;
+    transition: all 0.2s;
+    height: clamp(2rem, 3.6vw, 2.35rem);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  }
+
+  .btn-prev:hover {
+    background-color: rgba(12, 12, 12, 0.02);
+  }
+
+  .btn-prev:active {
+    transform: scale(0.98);
+  }
+
+  .btn-next {
+    padding: clamp(0.75rem, 1vw, 0.75rem) clamp(1.25rem, 2vw, 1.5rem);
+    background-color: var(--btn-bg);
+    color: var(--brand-color);
+    border-radius: clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.75rem, 1.2vw, 0.75rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.25rem, 0.5vw, 0.5rem);
+    height: clamp(2.35rem, 3.6vw, 2.35rem);
+    justify-content: center;
+    white-space: nowrap;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    border: 1px solid transparent;
+    outline: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  }
+
+  /* Large monitors button adjustments - keep desktop sizes */
+  @media (min-width: 1920px) {
+    .btn-next {
+      font-size: 0.75rem;
+      padding: 0.625rem 1.25rem;
+      height: 2.5rem;
+      gap: 0.375rem;
+    }
+    
+    .btn-prev {
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      height: 2.5rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .btn-next {
+      font-size: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      height: 2.5rem;
+      gap: 0.5rem;
+    }
+    
+    .btn-prev {
+      font-size: 0.75rem;
+      padding: 0.625rem 1.25rem;
+      height: 2.5rem;
+    }
+  }
+
+  .btn-next:hover {
+    transform: translateY(-2px);
+    background-color: var(--btn-bg-hover);
+    box-shadow: none;
+  }
+
+  .btn-next:active {
+    transform: scale(0.98);
+    background-color: var(--btn-bg-active);
+  }
+
+  .btn-next.wide {
+    width: clamp(12rem, 25vw, 18rem);
+  }
+
+  .btn-next.normal {
+    width: clamp(10rem, 20vw, 16rem);
+  }
+
+  .btn-next svg {
+    width: clamp(12px, 2vw, 16px);
+    height: clamp(12px, 2vw, 16px);
+  }
+
+  /* Tablet adjustments for approval buttons */
+  @media (max-width: 1365px) and (min-width: 785px) {
+    .btn-approve, .btn-reject {
+      font-size: 0.55rem;
+      padding: 0.35rem 0.6rem;
+      width: 4.8rem;
+      letter-spacing: 0.025em;
+      min-height: 2rem;
+    }
+    
+    .employee-actions {
+      min-width: 4.8rem;
+    }
+    
+    .status-approved, .status-rejected {
+      font-size: 0.5rem;
+      padding: 0.25rem 0.35rem;
+      gap: 0.2rem;
+    }
+  }
+
+  /* Mobile button adjustments */
+  @media (max-width: 784px) {
+    .btn-prev {
+      font-size: 0.8rem;
+      padding: 0.625rem 1rem;
+      min-height: 2.5rem;
+    }
+    
+    .btn-next {
+      font-size: 0.8rem;
+      padding: 0.875rem 1.25rem;
+      min-height: 2.5rem;
+      letter-spacing: 0.02em;
+    }
+    
+    .btn-next.wide {
+      width: 14rem;
+      min-width: 14rem;
+    }
+    
+    .btn-next.normal {
+      width: 12rem;
+      min-width: 12rem;
+    }
+    
+    .employee-card {
+      flex-wrap: wrap;
+    }
+    
+    .employee-stats {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+    
+    .btn-approve, .btn-reject {
+      font-size: 0.45rem;
+      padding: 0.3rem 0.4rem;
+      width: 4.2rem;
+      letter-spacing: 0.02em;
+      min-height: 1.8rem;
+    }
+    
+    .employee-actions {
+      min-width: 4.2rem;
+    }
+    
+    .status-approved, .status-rejected {
+      font-size: 0.4rem;
+      padding: 0.2rem 0.3rem;
+      gap: 0.15rem;
+    }
+  }
+
+  .slide-indicator {
+    font-size: clamp(0.65rem, 1.1vw, 0.75rem);
+    color: #9CA3AF;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.28rem, 0.55vw, 0.4rem);
+    height: clamp(1.05rem, 1.8vw, 1.25rem);
+    min-height: 1.05rem;
+    flex-shrink: 0;
+    margin-bottom: 0.1rem;
+  }
+
+  /* Large monitors slide indicator adjustments - keep desktop sizes */
+  @media (min-width: 1920px) {
+    .slide-indicator {
+      font-size: 0.75rem;
+      gap: 0.35rem;
+      height: 1.35rem;
+      margin-top: 0;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .slide-indicator {
+      font-size: 0.75rem;
+      gap: 0.4rem;
+      height: 1.4rem;
+      margin-top: 0;
+    }
+  }
+
+  /* Mobile adjustments for slide indicator */
+  @media (max-width: 767px) {
+    .slide-indicator {
+      font-size: 0.7rem;
+      gap: 0.28rem;
+      height: 1.15rem;
+      margin-top: 0.1rem;
+    }
+  }
+
+  .slide-dots {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .slide-dot {
+    width: clamp(0.25rem, 0.5vw, 0.375rem);
+    height: clamp(0.25rem, 0.5vw, 0.375rem);
+    border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+
+  /* Large monitors slide dot adjustments */
+  @media (min-width: 1920px) {
+    .slide-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+    }
+  }
+
+  @media (min-width: 2560px) {
+    .slide-dot {
+      width: 0.625rem;
+      height: 0.625rem;
+    }
+  }
+
+  /* Mobile adjustments for slide dots */
+  @media (max-width: 767px) {
+    .slide-dot {
+      width: 0.375rem;
+      height: 0.375rem;
+    }
+  }
+
+  .slide-dot.active {
+    background-color: var(--secondary-color);
+  }
+
+  .slide-dot:not(.active) {
+    background-color: #D1D5DB;
+  }
+
+  /* Funnel specific styles - responsive */
+  .funnel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 1rem);
+  }
+
+  /* Mobile adjustments for funnel container */
+  @media (max-width: 767px) {
+    .funnel-container {
+      gap: 0.5rem;
+    }
+  }
+
+  .funnel-title {
+    font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+    font-weight: 600;
+    color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  /* Mobile adjustments for funnel title */
+  @media (max-width: 767px) {
+    .funnel-title {
+      font-size: 0.6rem;
+    }
+  }
+
+  .funnel-stages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    width: 100%;
+    padding: 0 clamp(0.5rem, 1vw, 1rem);
+    flex-wrap: nowrap;
+  }
+
+  /* Two-row funnel for tablet/mobile */
+  @media (max-width: 1365px) {
+    .funnel-stages {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: clamp(0.75rem, 1.5vw, 1rem);
+      max-width: 300px;
+    }
+    
+    .funnel-arrow {
+      display: none !important;
+    }
+    
+    .funnel-stage {
+      position: relative;
+    }
+  }
+
+  /* Mobile specific adjustments for funnel */
+  @media (max-width: 767px) {
+    .funnel-stages {
+      gap: 0.625rem;
+      max-width: 260px;
+    }
+  }
+
+  .funnel-stage {
+    text-align: center;
+    flex-shrink: 0;
+    animation: funnelFlow 0.6s ease-out both;
+  }
+
+  .funnel-box {
+    width: clamp(2.5rem, 5vw, 3rem);
+    height: clamp(2.5rem, 5vw, 3rem);
+    border-radius: 0.5rem;
+    background-color: rgba(var(--primary-rgb), 0.15);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+    font-weight: bold;
+    margin: 0 auto clamp(0.25rem, 0.5vw, 0.5rem);
+    box-shadow: 0 10px 15px -3px rgba(var(--primary-rgb), 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Mobile adjustments for funnel box */
+  @media (max-width: 767px) {
+    .funnel-box {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 0.75rem;
+      margin: 0 auto 0.25rem;
+    }
+  }
+
+  .funnel-box-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(var(--primary-rgb), 0.1), transparent);
+    pointer-events: none;
+  }
+
+  .funnel-box-number {
+    position: relative;
+    z-index: 1;
+  }
+
+  .funnel-label {
+    font-size: clamp(0.5rem, 1vw, 0.6rem);
+    font-weight: 500;
+    color: var(--primary-color);
+    opacity: 0.9;
+    line-height: 1.2;
+    max-width: clamp(3rem, 6vw, 4rem);
+    margin: 0 auto;
+  }
+
+  /* Mobile adjustments for funnel label */
+  @media (max-width: 767px) {
+    .funnel-label {
+      font-size: 0.5rem;
+      max-width: 3.5rem;
+      line-height: 1.1;
+    }
+  }
+
+  .funnel-arrow {
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+    flex-shrink: 0;
+    animation: funnelFlow 0.6s ease-out both;
+  }
+
+  /* Requirements slide - responsive */
+  .requirements-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+    width: 100%;
+    max-width: clamp(20rem, 40vw, 28rem);
+    height: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Mobile adjustments for requirements */
+  @media (max-width: 767px) {
+    .requirements-container {
+      gap: 0.375rem;
+      max-width: 18rem;
+    }
+  }
+
+  .requirements-title {
+    font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+    font-weight: 600;
+    color: var(--primary-color);
+    opacity: 0.8;
+    margin-bottom: clamp(0.125rem, 0.25vw, 0.25rem);
+  }
+
+  /* Mobile adjustments for requirements title */
+  @media (max-width: 767px) {
+    .requirements-title {
+      font-size: 0.6rem;
+      margin-bottom: 0.125rem;
+    }
+  }
+
+  .requirements-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+  }
+
+  /* Mobile adjustments for requirements list */
+  @media (max-width: 767px) {
+    .requirements-list {
+      gap: 0.375rem;
+    }
+  }
+
+  .requirement-item {
+    padding: clamp(0.375rem, 0.75vw, 0.5rem);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(var(--primary-rgb), 0.5);
+    display: flex;
+    align-items: center;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+  }
+
+  /* Mobile adjustments for requirement item */
+  @media (max-width: 767px) {
+    .requirement-item {
+      padding: 0.375rem;
+      gap: 0.375rem;
+    }
+  }
+
+  .requirement-icon {
+    width: clamp(1rem, 2vw, 1.25rem);
+    height: clamp(1rem, 2vw, 1.25rem);
+    border-radius: 0.25rem;
+    background-color: rgba(var(--primary-rgb), 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .requirement-icon svg {
+    width: clamp(8px, 1.5vw, 10px);
+    height: clamp(8px, 1.5vw, 10px);
+  }
+
+  .requirement-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .requirement-title {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .requirement-desc {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  .requirement-checkbox {
+    width: clamp(0.75rem, 1.5vw, 0.875rem);
+    height: clamp(0.75rem, 1.5vw, 0.875rem);
+    border-radius: 0.25rem;
+    border: 1px solid var(--primary-color);
+    background-color: rgba(var(--primary-rgb), 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .requirement-checkbox svg {
+    width: clamp(4px, 0.8vw, 6px);
+    height: clamp(4px, 0.8vw, 6px);
+  }
+
+  /* Approval slide - responsive */
+  .approval-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    height: 100%;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Mobile adjustments for approval */
+  @media (max-width: 767px) {
+    .approval-container {
+      gap: 0.5rem;
+    }
+  }
+
+  .employee-cards {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Mobile adjustments for employee cards */
+  @media (max-width: 767px) {
+    .employee-cards {
+      gap: 0.5rem;
+    }
+  }
+
+  .employee-card {
+    padding: clamp(0.5rem, 1vw, 0.75rem);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(var(--primary-rgb), 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: clamp(3rem, 6vw, 4rem);
+  }
+
+  /* Mobile adjustments for employee card */
+  @media (max-width: 767px) {
+    .employee-card {
+      padding: 0.5rem;
+      min-height: 3rem;
+    }
+  }
+
+  .employee-info {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.5rem, 1vw, 0.75rem);
+    margin-right: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  /* Mobile adjustments for employee info */
+  @media (max-width: 767px) {
+    .employee-info {
+      gap: 0.5rem;
+      margin-right: 1rem;
+    }
+  }
+
+  .employee-avatar {
+    width: clamp(2rem, 4vw, 3rem);
+    height: clamp(2rem, 4vw, 3rem);
+    background-color: rgba(var(--primary-rgb), 0.2);
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(var(--primary-rgb), 0.4);
+  }
+
+  .employee-avatar svg {
+    width: clamp(24px, 4vw, 36px);
+    height: clamp(24px, 4vw, 36px);
+  }
+
+  .employee-name {
+    font-size: clamp(0.65rem, 1.3vw, 0.75rem);
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: clamp(0.125rem, 0.25vw, 0.25rem);
+  }
+
+  .employee-stat {
+    font-size: clamp(0.5rem, 1vw, 0.6rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+  }
+
+  .btn-approve, .btn-reject {
+    padding: clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.5rem, 1vw, 0.65rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    width: clamp(4.5rem, 8vw, 5rem);
+    text-align: center;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    text-shadow: 0 0 8px currentColor;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  /* Mobile adjustments for approval cards */
+  @media (max-width: 767px) {
+    .employee-card {
+      flex-wrap: wrap;
+    }
+    
+    .employee-stats {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+  }
+
+  /* Curriculum slide - responsive */
+  .curriculum-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+    width: 100%;
+    max-width: clamp(20rem, 40vw, 28rem);
+    height: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Mobile adjustments for curriculum */
+  @media (max-width: 767px) {
+    .curriculum-container {
+      gap: 0.375rem;
+      max-width: 18rem;
+    }
+  }
+
+  .curriculum-title {
+    font-size: clamp(0.6rem, 1.2vw, 0.7rem);
+    font-weight: 600;
+    color: var(--primary-color);
+    opacity: 0.8;
+    margin-bottom: clamp(0.125rem, 0.25vw, 0.25rem);
+  }
+
+  /* Mobile adjustments for curriculum title */
+  @media (max-width: 767px) {
+    .curriculum-title {
+      font-size: 0.6rem;
+      margin-bottom: 0.125rem;
+    }
+  }
+
+  .curriculum-day {
+    padding: clamp(0.375rem, 0.75vw, 0.5rem);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(var(--primary-rgb), 0.5);
+  }
+
+  /* Mobile adjustments for curriculum day */
+  @media (max-width: 767px) {
+    .curriculum-day {
+      padding: 0.375rem;
+    }
+  }
+
+  .curriculum-day-number {
+    width: clamp(1rem, 2vw, 1.25rem);
+    height: clamp(1rem, 2vw, 1.25rem);
+    border-radius: 0.25rem;
+    background-color: rgba(var(--primary-rgb), 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .curriculum-day-number-text {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+
+  .curriculum-day-title-text {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .curriculum-day-percent {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  }
+
+  /* Ready slide - responsive */
+  .ready-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+    height: 100%;
+  }
+
+  /* Mobile adjustments for ready slide */
+  @media (max-width: 767px) {
+    .ready-container {
+      gap: 0.75rem;
+    }
+  }
+
+  .ready-star {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--primary-color);
+  }
+
+  /* Mobile adjustments for ready star */
+  @media (max-width: 767px) {
+    .ready-star {
+      font-size: 2.5rem;
+    }
+  }
+
+  .ready-text {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Mobile adjustments for ready text */
+  @media (max-width: 767px) {
+    .ready-text {
+      font-size: 1rem;
+    }
+  }
+
+  .ready-subtitle {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.8;
+    text-align: center;
+  }
+
+  /* Mobile adjustments for ready subtitle */
+  @media (max-width: 767px) {
+    .ready-subtitle {
+      font-size: 0.55rem;
+    }
+  }
+
+  .ready-progress {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.6;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: clamp(0.25rem, 0.5vw, 0.375rem);
+  }
+
+  /* Mobile adjustments for ready progress */
+  @media (max-width: 767px) {
+    .ready-progress {
+      font-size: 0.55rem;
+      gap: 0.25rem;
+    }
+  }
+
+  /* Touch support */
+  @media (hover: none) and (pointer: coarse) {
+    .nav-pill:hover,
+    .btn-prev:hover,
+    .btn-next:hover {
+      transform: none;
+    }
+  }
+
+  /* Hidden class */
+  .hidden {
+    display: none !important;
+  }
+
+  /* All animations remain the same */
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes fadeInSlide {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes slideProgress {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  @keyframes funnelFlow {
+    0% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
+  @keyframes pulseButton {
+    0% { 
+      transform: translateX(0) scale(1);
+      box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.35);
+    }
+    25% { 
+      transform: translateX(3px) scale(1.02);
+      box-shadow: 0 5px 18px rgba(var(--primary-rgb), 0.45);
+    }
+    50% { 
+      transform: translateX(0) scale(1.04);
+      box-shadow: 0 6px 22px rgba(var(--primary-rgb), 0.5);
+    }
+    75% { 
+      transform: translateX(3px) scale(1.02);
+      box-shadow: 0 5px 18px rgba(var(--primary-rgb), 0.45);
+    }
+    100% { 
+      transform: translateX(0) scale(1);
+      box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.35);
+    }
+  }
+  
+  @keyframes checkmarkDraw {
+    0% { 
+      stroke-dasharray: 20;
+      stroke-dashoffset: 20;
+      opacity: 0;
+    }
+    50% { opacity: 1; }
+    100% { 
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+  
+  @keyframes checkboxFill {
+    0% { 
+      background-color: rgba(var(--primary-rgb), 0);
+      border-color: rgba(var(--primary-rgb), 0.3);
+    }
+    100% { 
+      background-color: rgba(var(--primary-rgb), 0.2);
+      border-color: var(--primary-color);
+    }
+  }
+  
+  @keyframes requirementSlide {
+    0% { 
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes progressFill {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes daySlideIn {
+    0% { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes starEntrance {
+    0% { 
+      opacity: 0;
+      transform: scale(0) rotate(-180deg);
+    }
+    60% { transform: scale(1.2) rotate(0deg); }
+    100% { 
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes teamReadyType {
+    0% { width: 0%; }
+    100% { width: 100%; }
+  }
+  
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3); }
+    50% { box-shadow: 0 0 40px rgba(var(--primary-rgb), 0.6); }
+  }
+  
+  @keyframes buttonClickPulse {
+    0% { 
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+    }
+    50% { 
+      transform: scale(0.95);
+      box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.6);
+    }
+    100% { 
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.4);
+    }
+  }
+  
+  @keyframes rejectButtonPulse {
+    0% { 
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+    }
+    50% { 
+      transform: scale(0.95);
+      box-shadow: 0 0 25px rgba(255, 68, 68, 0.6);
+    }
+    100% { 
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+    }
+  }
+  
+  @keyframes buttonToStatus {
+    0% { 
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% { 
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+  
+  @keyframes statusAppear {
+    0% { 
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    100% { 
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes cursorMovement {
+    0% { 
+      opacity: 1;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(30px, 6vw, 46px);
+    }
+    20% { 
+      opacity: 1;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(30px, 6vw, 46px);
+    }
+    40% { 
+      opacity: 0.7;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(120px, 25vw, 165px);
+    }
+    65% { 
+      opacity: 1;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(120px, 25vw, 165px);
+    }
+    85% { 
+      opacity: 0.8;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(145px, 28vw, 190px);
+    }
+    100% { 
+      opacity: 0.6;
+      right: clamp(28px, 6vw, 42px);
+      top: clamp(155px, 30vw, 200px);
+    }
+  }
+  
+  .pixelated {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  
+  .pixelated-btn {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border-radius: 0;
+    box-shadow: 0 0 10px currentColor;
+  }
+
+  .btn-approve {
+    background-color: rgba(var(--primary-rgb), 0.2);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+  }
+
+  .btn-reject {
+    background-color: rgba(255, 68, 68, 0.2);
+    border: 2px solid var(--error-color);
+    color: var(--error-color);
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 2;
+  }
+
+  .status-approved, .status-rejected {
+    padding: clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.375rem, 0.75vw, 0.5rem);
+    border-radius: 0.25rem;
+    font-size: clamp(0.45rem, 0.9vw, 0.55rem);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .status-approved {
+    background-color: rgba(var(--primary-rgb), 0.3);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+  }
+
+  .status-rejected {
+    background-color: rgba(255, 68, 68, 0.3);
+    border: 2px solid var(--error-color);
+    color: var(--error-color);
+  }
+
+  .animated-cursor {
+    position: absolute;
+    pointer-events: none;
+    right: 32px;
+    top: 36px;
+  }
+
+  .curriculum-day-header {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+    margin-bottom: clamp(0.25rem, 0.5vw, 0.375rem);
+  }
+
+  /* Mobile adjustments for curriculum day header */
+  @media (max-width: 767px) {
+    .curriculum-day-header {
+      gap: 0.375rem;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .curriculum-day-title {
+    flex: 1;
+  }
+
+  .curriculum-day-progress {
+    padding-left: clamp(1.375rem, 2.75vw, 1.75rem);
+  }
+
+  /* Mobile adjustments for curriculum day progress */
+  @media (max-width: 767px) {
+    .curriculum-day-progress {
+      padding-left: 1.375rem;
+    }
+  }
+
+  .curriculum-progress-bar {
+    width: 100%;
+    background-color: rgba(var(--primary-rgb), 0.2);
+    border-radius: 9999px;
+    height: 0.25rem;
+  }
+
+  .curriculum-progress-fill {
+    background-color: var(--primary-color);
+    height: 0.25rem;
+    border-radius: 9999px;
+    width: 0%;
+  }
+
+  .curriculum-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+  }
+
+  /* Mobile adjustments for curriculum list */
+  @media (max-width: 767px) {
+    .curriculum-list {
+      gap: 0.375rem;
+    }
+  }
+
+  .curriculum-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: clamp(0.375rem, 0.75vw, 0.5rem);
+    padding: clamp(0.25rem, 0.5vw, 0.375rem);
+    background-color: rgba(var(--primary-rgb), 0.05);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(var(--primary-rgb), 0.3);
+  }
+
+  /* Mobile adjustments for curriculum summary */
+  @media (max-width: 767px) {
+    .curriculum-summary {
+      margin-top: 0.375rem;
+      padding: 0.25rem;
+    }
+  }
+
+  .curriculum-summary-left, .curriculum-summary-right {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.25rem, 0.5vw, 0.375rem);
+  }
+
+  /* Mobile adjustments for curriculum summary sections */
+  @media (max-width: 767px) {
+    .curriculum-summary-left, .curriculum-summary-right {
+      gap: 0.25rem;
+    }
+  }
+
+  .curriculum-summary-text {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+  }
+
+  .curriculum-checkmark {
+    width: clamp(0.75rem, 1.5vw, 0.875rem);
+    height: clamp(0.75rem, 1.5vw, 0.875rem);
+    border-radius: 0.25rem;
+    border: 1px solid var(--primary-color);
+    background-color: rgba(var(--primary-rgb), 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ready-text-inner {
+    display: inline-block;
+    width: 0%;
+    overflow: hidden;
+  }
+
+  .ready-progress-bar {
+    position: relative;
+  }
+
+  .ready-progress-bg {
+    color: rgba(var(--primary-rgb), 0.3);
+  }
+
+  .ready-progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    color: var(--primary-color);
+    width: 0%;
+    transition: width 0.1s ease-out;
+  }
+
+  .requirement-check {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  /* Mobile adjustments for requirement check */
+  @media (max-width: 767px) {
+    .requirement-check {
+      gap: 0.25rem;
+    }
+  }
+
+  .test-duration {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.375rem, 0.75vw, 0.5rem);
+    margin-top: clamp(0.125rem, 0.25vw, 0.25rem);
+    animation: requirementSlide 0.6s ease-out 2.6s both;
+  }
+
+  /* Mobile adjustments for test duration */
+  @media (max-width: 767px) {
+    .test-duration {
+      gap: 0.375rem;
+      margin-top: 0.125rem;
+    }
+  }
+
+  .test-duration-text {
+    font-size: clamp(0.55rem, 1.1vw, 0.65rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+    font-family: 'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.25rem, 0.5vw, 0.375rem);
+  }
+
+  /* Mobile adjustments for action buttons */
+  @media (max-width: 767px) {
+    .action-buttons {
+      gap: 0.25rem;
+    }
+  }
+
+  .employee-actions {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.25rem, 0.5vw, 0.375rem);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    min-width: clamp(4.5rem, 8vw, 5rem);
+  }
+
+  /* Mobile adjustments for employee actions */
+  @media (max-width: 767px) {
+    .employee-actions {
+      gap: 0.25rem;
+    }
+  }
+
+  .employee-details {
+    flex: 1;
+  }
+
+  .employee-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    text-align: left;
+  }
+
+  /* Mobile adjustments for employee stats */
+  @media (max-width: 767px) {
+    .employee-stats {
+      gap: 0.125rem;
+    }
+  }
+
+  .cards-container {
+    position: relative;
+  }
+
+  /* Dash line animation */
+  .dash-line.animate {
+    animation: fadeIn 0.1s ease-out forwards;
+  }
+</style>
+<div class="journey-wrapper">
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+
+  <!-- Navigation Pills -->
+  <div class="nav-pills-container" id="navPillsContainer">
+    <div class="nav-pills" id="navPills"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="content-inner">
+      <!-- Top Section - Heading -->
+      <div class="top-section">
+        <h1 class="heading" id="slideHeading"></h1>
+      </div>
+
+      <!-- Middle Section - CRT Screen -->
+      <div class="middle-section">
+        <div class="monitor-wrapper">
+          <div class="monitor-outer">
+            <div class="monitor-bezel">
+              <div class="crt-screen" id="crtScreen">
+                <div class="scanlines"></div>
+                <div class="screen-glow"></div>
+                <div class="screen-content" id="screenContent">
+                  <!-- Dynamic content will be inserted here -->
+                </div>
+                <div class="crt-reflection"></div>
+              </div>
+            </div>
+            <div class="power-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Section - Navigation -->
+      <div class="bottom-section">
+        <div class="nav-buttons">
+          <button class="btn-prev hidden gtm-i--tab__prev_step" id="btnPrev" onclick="prevSlide()">← Previous</button>
+          <button class="btn-next gtm-i--tab__next_step" id="btnNext" onclick="nextSlide()">
+            <span id="btnNextText"></span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="btnNextIcon">
+              <path d="m9 18 6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+        <div class="slide-indicator">
+          <span id="slideIndicatorText"></span>
+          <div class="slide-dots" id="slideDots"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// State variables
+let currentSlide = 0;
+let progressCounters = [0, 0, 0];
+let finalProgress = 0;
+let animationTimers = [];
+let touchStartX = 0;
+let touchEndX = 0;
+
+// Slides data
+const slides = [
+  {
+    id: 'start',
+    title: 'Start Journey',
+    heading: 'So, you have signed Statements of Work (SOW) and deposited 1 month. Whats next?',
+    buttonText: 'Watch 14-days Journey'
+  },
+  {
+    id: 'vetting',
+    title: 'Vetting',
+    heading: 'Robot (LLM based) screens, vets and triages CV-inbox',
+    buttonText: 'Interviews & Test',
+    funnel: [
+      { stage: '~300 applicants', count: 300 },
+      { stage: '~200 CVs in inbox', count: 200 },
+      { stage: '~40 Interviews', count: 40 },
+      { stage: '~10 teammates', count: 10 }
+    ]
+  },
+  {
+    id: 'interviews',
+    title: 'Interviews & Test',
+    heading: '1 hr test under oversight covers EN-proficiency, Tech and Specific skills.',
+    buttonText: 'Your Approval',
+    requirements: [
+      { text: 'C1 for frontline | B2 for data-entry' },
+      { text: '65 WPM required' },
+      { text: 'Job specific skills' }
+    ]
+  },
+  {
+    id: 'approval',
+    title: 'Your Approval',
+    heading: 'Approve or Decline each candidate on our glass-box Platform',
+    buttonText: 'Pre-Learning'
+  },
+  {
+    id: 'learning',
+    title: 'Pre-Learning',
+    heading: 'Candidates undergo 3-days course to achieve basic knowledge alignment',
+    buttonText: 'Team is ready',
+    curriculum: [
+      { topic: 'Industry Vocabulary' },
+      { topic: 'Basic niche concepts' }
+    ]
+  },
+  {
+    id: 'ready',
+    title: 'Team is ready',
+    heading: 'In 14 days you have vetted, tested, pre-taught team ready to start your Train & Work',
+    buttonText: 'Get Started'
+  }
+];
+
+// ===== GTM mapping для верхних табов =====
+const TAB_GTM = {
+  start:      'start_journey',
+  vetting:    'vetting',
+  interviews: 'interviews_test',
+  approval:   'your_approval',
+  learning:   'pre_learning',
+  ready:      'team_ready'
+};
+
+const STYLE_ROOT = getComputedStyle(document.documentElement);
+const ACCENT_COLOR = STYLE_ROOT.getPropertyValue('--accent-color').trim() || '#00FF64';
+const PROGRESS_BREAKPOINT = 785;
+const journeyWrapperEl = document.querySelector('.journey-wrapper');
+const progressBarContainerEl = document.querySelector('.progress-bar-container');
+const navPillsContainerEl = document.getElementById('navPillsContainer');
+const bottomSectionEl = document.querySelector('.bottom-section');
+
+function updateProgressPlacement() {
+  if (!progressBarContainerEl || !journeyWrapperEl || !navPillsContainerEl || !bottomSectionEl) {
+    return;
+  }
+
+  if (window.innerWidth >= PROGRESS_BREAKPOINT) {
+    bottomSectionEl.classList.add('progress-bottom-active');
+    if (progressBarContainerEl.parentElement !== bottomSectionEl) {
+      bottomSectionEl.insertBefore(progressBarContainerEl, bottomSectionEl.firstChild);
+    }
+  } else {
+    bottomSectionEl.classList.remove('progress-bottom-active');
+    if (progressBarContainerEl.parentElement !== journeyWrapperEl) {
+      journeyWrapperEl.insertBefore(progressBarContainerEl, navPillsContainerEl);
+    }
+  }
+}
+
+updateProgressPlacement();
+window.addEventListener('resize', updateProgressPlacement);
+
+// Initialize
+function init() {
+  renderNavPills();
+  renderSlideDots();
+  goToSlide(0);
+  setupTouchSupport();
+  setupIntersectionObserver();
+}
+
+// Setup touch support for mobile swipe
+function setupTouchSupport() {
+  const wrapper = document.querySelector('.journey-wrapper');
+  
+  wrapper.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, false);
+  
+  wrapper.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, false);
+}
+
+// Handle swipe gestures
+function handleSwipe() {
+  const swipeThreshold = 50;
+  const diff = touchStartX - touchEndX;
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Swipe left - next slide
+      if (currentSlide < slides.length - 1) {
+        nextSlide();
+      }
+    } else {
+      // Swipe right - previous slide
+      if (currentSlide > 0) {
+        prevSlide();
+      }
+    }
+  }
+}
+
+// Scroll navigation pills to active
+function scrollToActivePill() {
+  const container = document.getElementById('navPillsContainer');
+  const activePill = container.querySelector('.nav-pill.active');
+  
+  if (activePill && container) {
+    const containerWidth = container.offsetWidth;
+    const pillLeft = activePill.offsetLeft;
+    const pillWidth = activePill.offsetWidth;
+    const scrollWidth = container.scrollWidth;
+    
+    // Calculate desired scroll position (center the pill)
+    let scrollPosition = pillLeft - (containerWidth / 2) + (pillWidth / 2);
+    
+    // Apply boundaries
+    const maxScroll = scrollWidth - containerWidth;
+    scrollPosition = Math.max(0, Math.min(scrollPosition, maxScroll));
+    
+    container.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+  }
+}
+
+// Intersection Observer for animations
+function setupIntersectionObserver() {
+  const crtScreen = document.querySelector('.crt-screen');
+  
+  if (!crtScreen) return;
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const dashLines = entry.target.querySelectorAll('.dash-line');
+      
+      if (entry.isIntersecting) {
+        dashLines.forEach(line => {
+          line.classList.add('animate');
+        });
+      } else {
+        dashLines.forEach(line => {
+          line.classList.remove('animate');
+          line.style.opacity = '0';
+          
+          setTimeout(() => {
+            line.style.opacity = '';
+          }, 50);
+        });
+      }
+    });
+  }, {
+    root: null,
+    rootMargin: '20px',
+    threshold: 0.1
+  });
+  
+  observer.observe(crtScreen);
+}
+
+// Render navigation pills
+function renderNavPills() {
+  const navPillsContainer = document.getElementById('navPills');
+  navPillsContainer.innerHTML = '';
+  
+  slides.forEach((slide, index) => {
+    const pill = document.createElement('button');
+//    pill.className = 'nav-pill';
+    pill.className = `nav-pill gtm-i--tab__${TAB_GTM[slide.id] || slide.id}`;
+    pill.type = 'button';
+    pill.textContent = slide.title;
+    pill.onclick = () => goToSlide(index);
+    navPillsContainer.appendChild(pill);
+  });
+}
+
+// Render slide dots
+function renderSlideDots() {
+  const dotsContainer = document.getElementById('slideDots');
+  dotsContainer.innerHTML = '';
+  
+  slides.forEach((_, index) => {
+    const dot = document.createElement('div');
+    dot.className = 'slide-dot';
+    dotsContainer.appendChild(dot);
+  });
+}
+
+// Update UI elements
+function updateUI() {
+  const slide = slides[currentSlide];
+  
+  // Update progress bar
+  const progressBar = document.getElementById('progressBar');
+  progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+  
+  // Update nav pills
+  const pills = document.querySelectorAll('.nav-pill');
+  pills.forEach((pill, index) => {
+    if (index === currentSlide) {
+      pill.classList.add('active');
+    } else {
+      pill.classList.remove('active');
+    }
+  });
+  
+  // Scroll to active pill
+  scrollToActivePill();
+  
+  // Update heading
+  document.getElementById('slideHeading').textContent = slide.heading;
+  
+  // Update buttons
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const btnNextText = document.getElementById('btnNextText');
+  const btnNextIcon = document.getElementById('btnNextIcon');
+  
+  if (currentSlide > 0) {
+    btnPrev.classList.remove('hidden');
+  } else {
+    btnPrev.classList.add('hidden');
+  }
+  
+  btnNextText.textContent = slide.buttonText;
+  
+  // === CTA класс на последнем шаге ===
+  btnNext.classList.remove('gtm-i--tab__next_step', 'gtm-i--cta__get_started');
+
+  if (currentSlide === slides.length - 1) {
+  // Финальный шаг → клик считаем как CTA
+  btnNext.classList.add('gtm-i--cta__get_started');
+  } else {
+  // Промежуточные шаги → это "next step"
+  btnNext.classList.add('gtm-i--tab__next_step');
+  }
+
+  
+  if (currentSlide === 0 || currentSlide === slides.length - 1) {
+    btnNext.classList.add('wide');
+    btnNext.classList.remove('normal');
+    btnNextIcon.style.display = 'block';
+    
+    if (currentSlide === slides.length - 1) {
+      btnNextIcon.innerHTML = '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>';
+    } else {
+      btnNextIcon.innerHTML = '<path d="m9 18 6-6-6-6"/>';
+    }
+  } else {
+    btnNext.classList.add('normal');
+    btnNext.classList.remove('wide');
+    btnNextIcon.style.display = 'none';
+  }
+  
+  // Update slide indicator
+  document.getElementById('slideIndicatorText').textContent = `Step ${currentSlide + 1} of ${slides.length}`;
+  
+  // Update dots
+  const dots = document.querySelectorAll('.slide-dot');
+  dots.forEach((dot, index) => {
+    if (index === currentSlide) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+  
+  // Render slide content
+  renderSlideContent();
+}
+
+// Render slide content based on viewport
+function renderSlideContent() {
+  const screenContent = document.getElementById('screenContent');
+  const slide = slides[currentSlide];
+  
+  // Clear previous timers
+  animationTimers.forEach(timer => clearTimeout(timer));
+  animationTimers = [];
+  
+  switch (slide.id) {
+    case 'start':
+      renderStartSlide(screenContent);
+      setTimeout(() => setupIntersectionObserver(), 100);
+      break;
+    case 'vetting':
+      renderVettingSlide(screenContent);
+      break;
+    case 'interviews':
+      renderInterviewsSlide(screenContent);
+      break;
+    case 'approval':
+      renderApprovalSlide(screenContent);
+      break;
+    case 'learning':
+      renderLearningSlide(screenContent);
+      break;
+    case 'ready':
+      renderReadySlide(screenContent);
+      break;
+  }
+}
+
+// Get responsive SVG dimensions
+function getResponsiveSVGDimensions() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth <= 767) {
+    return { width: 280, height: 180 }; // Base size for mobile, will be scaled up in renderStartSlide
+  } else if (screenWidth <= 1365) {
+    return { width: 400, height: 190 };
+  } else if (screenWidth >= 2560) {
+    return { width: 650, height: 300 }; // 4K monitors
+  } else if (screenWidth >= 1920) {
+    return { width: 550, height: 260 }; // 2K monitors
+  }
+  return { width: 468, height: 218 }; // Default desktop
+}
+
+// Render Start slide - responsive
+function renderStartSlide(container) {
+  const dims = getResponsiveSVGDimensions();
+  const scale = dims.width / 468;
+  const isMobile = window.innerWidth <= 767;
+  
+  // Increase mobile scale even more for better visibility
+  const mobileScale = isMobile ? 1.8 : 1;
+  const adjustedWidth = isMobile ? dims.width * mobileScale : dims.width;
+  const adjustedHeight = isMobile ? dims.height * mobileScale : dims.height;
+  
+  container.innerHTML = `
+    <svg width="${adjustedWidth}" height="${adjustedHeight}" viewBox="0 0 ${isMobile ? 320 : 468} ${isMobile ? 220 : 218}" preserveAspectRatio="xMidYMid meet" class="block">
+      ${Array.from({length: 14}, (_, i) => {
+        // Mobile: better centering and larger elements
+        const baseX = isMobile ? 23 : 28;
+        const baseY1 = isMobile ? 50 : 65;
+        const baseY2 = isMobile ? 105 : 125;
+        const spacing = isMobile ? 39 : 60;
+        const boxWidth = isMobile ? 35 : 45;
+        const boxHeight = isMobile ? 30 : 30; // Increased height for mobile
+        
+        const x = baseX + (i % 7) * spacing;
+        const y = i < 7 ? baseY1 : baseY2;
+        let opacity = 0.3;
+        
+        if (i === 0) opacity = 1;
+        else if (i >= 1 && i <= 12) opacity = 0.6;
+        else if (i === 13) opacity = 1;
+        
+        return `
+          <g>
+            <rect x="${x}" y="${y}" width="${boxWidth}" height="${boxHeight}" fill="none" stroke="${ACCENT_COLOR}" stroke-width="1.8" opacity="${opacity}"/>
+            <text x="${x + boxWidth/2}" y="${y + boxHeight/2 + 4}" text-anchor="middle" font-size="${isMobile ? 11 : 12 * scale}" font-family="'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" fill="${ACCENT_COLOR}" font-weight="600" opacity="${opacity}">
+              ${String(i + 1).padStart(2, '0')}
+            </text>
+          </g>
+        `;
+      }).join('')}
+      
+      ${(() => {
+        const totalDashes = 22;
+        const dashes = [];
+        
+        for (let i = 0; i < totalDashes; i++) {
+          const t = i / (totalDashes - 1);
+          // Mobile: adjusted curve points for better centering
+          const startX = isMobile ? 58 : 73;
+          const midX = isMobile ? 160 : 234;
+          const endX = isMobile ? 262 : 388;
+          const startY = isMobile ? 65 : 80;
+          const midY = isMobile ? 42 : 55;
+          const endY = isMobile ? 120 : 140;
+          
+          const x = Math.pow(1-t, 2) * startX + 2*(1-t)*t*midX + Math.pow(t, 2) * endX;
+          const y = Math.pow(1-t, 2) * startY + 2*(1-t)*t*midY + Math.pow(t, 2) * endY;
+          
+          const nextT = Math.min((i + 1) / (totalDashes - 1), 1);
+          const nextX = Math.pow(1-nextT, 2) * startX + 2*(1-nextT)*nextT*midX + Math.pow(nextT, 2) * endX;
+          const nextY = Math.pow(1-nextT, 2) * startY + 2*(1-nextT)*nextT*midY + Math.pow(nextT, 2) * endY;
+          
+          const dashLength = isMobile ? 4 : 5;
+          const dx = nextX - x;
+          const dy = nextY - y;
+          const length = Math.sqrt(dx*dx + dy*dy);
+          
+          if (length > 0.1) {
+            const unitX = dx / length;
+            const unitY = dy / length;
+            
+            dashes.push(`
+              <line x1="${x}" y1="${y}" x2="${x + unitX * dashLength}" y2="${y + unitY * dashLength}"
+                stroke="${ACCENT_COLOR}" stroke-width="2.5" opacity="0" class="dash-line"
+                style="animation-delay: ${i * 0.08}s"/>
+            `);
+          }
+        }
+        
+        return dashes.join('');
+      })()}
+      
+      <text x="${isMobile ? 160 : 234}" y="${isMobile ? 30 : 45}" text-anchor="middle" font-size="${isMobile ? 12 : 10 * scale}" font-family="'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" fill="${ACCENT_COLOR}" opacity="0.8" font-weight="600">
+        14-DAY TIMELINE
+      </text>
+      
+      <text x="${isMobile ? 160 : 234}" y="${isMobile ? 165 : 185}" text-anchor="middle" font-size="${isMobile ? 9.5 : 9 * scale}" font-family="'SF Pro Display','SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" fill="${ACCENT_COLOR}" opacity="0.6" font-weight="500">
+        [■■■■■■■■■■■■■■] READY TO START
+      </text>
+    </svg>
+  `;
+}
+
+// Render Vetting slide - responsive with 2-row layout on mobile/tablet
+function renderVettingSlide(container) {
+  const slide = slides[currentSlide];
+  const isMobile = window.innerWidth <= 1365;
+  
+  container.innerHTML = `
+    <div class="funnel-container">
+      <div class="funnel-title">CANDIDATE PROCESSING</div>
+      <div class="funnel-stages">
+        ${slide.funnel.map((stage, index) => `
+          <div class="funnel-stage" style="animation-delay: ${index * 0.3}s">
+            <div class="funnel-box">
+              <div class="funnel-box-glow"></div>
+              <span class="funnel-box-number">${stage.count}</span>
+            </div>
+            <div class="funnel-label">${stage.stage}</div>
+          </div>
+          ${!isMobile && index < slide.funnel.length - 1 ? `
+            <div class="funnel-arrow" style="animation-delay: ${index * 0.3 + 0.2}s">→</div>
+          ` : ''}
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// Render Interviews slide
+function renderInterviewsSlide(container) {
+  container.innerHTML = `
+    <div class="requirements-container">
+      <div class="requirements-title">TEST REQUIREMENTS</div>
+      <div class="requirements-list">
+        <div class="requirement-item" style="animation: requirementSlide 0.6s ease-out 0.5s both">
+          <div class="requirement-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            </svg>
+          </div>
+          <div class="requirement-content">
+            <div class="requirement-title">English Level</div>
+            <div class="requirement-desc">C1 frontline | B2 data-entry</div>
+          </div>
+          <div class="requirement-checkbox" style="animation: checkboxFill 0.8s ease-out 1.2s both">
+            <svg width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="3">
+              <polyline points="20,6 9,17 4,12" style="animation: checkmarkDraw 0.8s ease-out 1.5s both"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="requirement-item" style="animation: requirementSlide 0.6s ease-out 0.8s both">
+          <div class="requirement-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="6" y1="10" x2="18" y2="10"/>
+            </svg>
+          </div>
+          <div class="requirement-content">
+            <div class="requirement-title">Typing Speed</div>
+            <div class="requirement-desc">65 WPM required</div>
+          </div>
+          <div class="requirement-check">
+            <span class="requirement-desc" style="animation: requirementSlide 0.6s ease-out 1.4s both">65+</span>
+            <div class="requirement-checkbox" style="animation: checkboxFill 0.8s ease-out 1.6s both">
+              <svg width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="3">
+                <polyline points="20,6 9,17 4,12" style="animation: checkmarkDraw 0.8s ease-out 1.9s both"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="requirement-item" style="animation: requirementSlide 0.6s ease-out 1.1s both">
+          <div class="requirement-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="2">
+              <path d="M9 12l2 2 4-4"/>
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </div>
+          <div class="requirement-content">
+            <div class="requirement-title">Technical Skills</div>
+            <div class="requirement-desc">Job specific skills</div>
+          </div>
+          <div class="requirement-checkbox" style="animation: checkboxFill 0.8s ease-out 2.0s both">
+            <svg width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="3">
+              <polyline points="20,6 9,17 4,12" style="animation: checkmarkDraw 0.8s ease-out 2.3s both"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-duration">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="2" style="opacity: 0.7">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        <span class="test-duration-text">1 hour test</span>
+      </div>
+    </div>
+  `;
+}
+
+// Render Approval slide
+function renderApprovalSlide(container) {
+  const isMobile = window.innerWidth <= 767;
+  const isTablet = window.innerWidth > 767 && window.innerWidth <= 1365;
+  const avatarSize = isMobile ? 24 : 36;
+  
+  container.innerHTML = `
+    <div class="approval-container">
+      <div class="cards-container">
+        <div class="employee-cards">
+          <div class="employee-card" style="animation: fadeInSlide 0.6s ease-out 0.5s both">
+            <div class="employee-info">
+              <div class="employee-avatar">
+                <svg width="${avatarSize}" height="${avatarSize}" viewBox="0 0 48 48" class="pixelated">
+                  <rect x="16" y="2" width="16" height="16" fill="#C4915C"/>
+                  <rect x="12" y="0" width="24" height="6" fill="#1A1A1A"/>
+                  <rect x="10" y="4" width="6" height="16" fill="#1A1A1A"/>
+                  <rect x="32" y="4" width="6" height="16" fill="#1A1A1A"/>
+                  <rect x="12" y="16" width="24" height="8" fill="#1A1A1A"/>
+                  <rect x="20" y="9" width="2" height="2" fill="#2D1B1B"/>
+                  <rect x="26" y="9" width="2" height="2" fill="#2D1B1B"/>
+                  <rect x="20" y="9" width="1" height="1" fill="#FFFFFF"/>
+                  <rect x="26" y="9" width="1" height="1" fill="#FFFFFF"/>
+                  <rect x="19" y="8" width="4" height="1" fill="#1A1A1A"/>
+                  <rect x="25" y="8" width="4" height="1" fill="#1A1A1A"/>
+                  <rect x="23" y="12" width="2" height="1" fill="#A67C52"/>
+                  <rect x="21" y="14" width="6" height="1" fill="#8B4513"/>
+                  <rect x="20" y="13" width="1" height="1" fill="#8B4513"/>
+                  <rect x="27" y="13" width="1" height="1" fill="#8B4513"/>
+                  <rect x="21" y="18" width="6" height="4" fill="#C4915C"/>
+                  <rect x="8" y="22" width="32" height="26" fill="#FFFFFF"/>
+                  <rect x="10" y="24" width="28" height="24" fill="#F8FAFC"/>
+                  <rect x="20" y="22" width="8" height="4" fill="#E2E8F0"/>
+                  <rect x="23" y="26" width="2" height="8" fill="#CBD5E1"/>
+                  <rect x="22" y="28" width="4" height="1" fill="#94A3B8"/>
+                </svg>
+              </div>
+              <div class="employee-details">
+                <div class="employee-name">Angelo Cruz</div>
+                <div class="employee-stats">
+                  <div class="employee-stat">EN: 94%</div>
+                  <div class="employee-stat">Type: 82 WPM</div>
+                  <div class="employee-stat">3y exp</div>
+                </div>
+              </div>
+            </div>
+            <div class="employee-actions">
+              <div class="action-buttons" id="actions1">
+                <button class="btn-approve pixelated-btn">APPROVE</button>
+                <button class="btn-reject pixelated-btn">REJECT</button>
+              </div>
+              <div class="status-badge" id="status1">
+                <div class="status-approved pixelated-btn">
+                  <svg width="8" height="8" viewBox="0 0 10 10" class="pixelated">
+                    <rect x="1" y="5" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="2" y="6" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="3" y="7" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="4" y="6" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="5" y="5" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="6" y="4" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="7" y="3" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                    <rect x="8" y="2" width="1" height="1" fill="${ACCENT_COLOR}"/>
+                  </svg>
+                  APPROVED
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="employee-card" style="animation: fadeInSlide 0.6s ease-out 0.8s both">
+            <div class="employee-info">
+              <div class="employee-avatar">
+                <svg width="${avatarSize}" height="${avatarSize}" viewBox="0 0 48 48" class="pixelated">
+                  <rect x="16" y="2" width="16" height="16" fill="#B8956A"/>
+                  <rect x="16" y="0" width="16" height="4" fill="#1A1A1A"/>
+                  <rect x="14" y="2" width="4" height="8" fill="#1A1A1A"/>
+                  <rect x="30" y="2" width="4" height="8" fill="#1A1A1A"/>
+                  <rect x="16" y="8" width="16" height="2" fill="#2D2D2D"/>
+                  <rect x="20" y="9" width="2" height="2" fill="#2D1B1B"/>
+                  <rect x="26" y="9" width="2" height="2" fill="#2D1B1B"/>
+                  <rect x="20" y="9" width="1" height="1" fill="#FFFFFF"/>
+                  <rect x="26" y="9" width="1" height="1" fill="#FFFFFF"/>
+                  <rect x="19" y="8" width="4" height="1" fill="#1A1A1A"/>
+                  <rect x="25" y="8" width="4" height="1" fill="#1A1A1A"/>
+                  <rect x="23" y="12" width="2" height="2" fill="#9A7B4F"/>
+                  <rect x="21" y="14" width="6" height="1" fill="#8B4513"/>
+                  <rect x="20" y="15" width="1" height="1" fill="#8B4513"/>
+                  <rect x="27" y="15" width="1" height="1" fill="#8B4513"/>
+                  <rect x="21" y="18" width="6" height="4" fill="#B8956A"/>
+                  <rect x="8" y="22" width="32" height="26" fill="#1E40AF"/>
+                  <rect x="10" y="24" width="28" height="24" fill="#3B82F6"/>
+                  <rect x="20" y="22" width="8" height="4" fill="#1D4ED8"/>
+                  <rect x="23" y="26" width="2" height="2" fill="#FFFFFF"/>
+                  <rect x="23" y="30" width="2" height="2" fill="#FFFFFF"/>
+                  <rect x="26" y="28" width="4" height="3" fill="#1E40AF"/>
+                </svg>
+              </div>
+              <div class="employee-details">
+                <div class="employee-name">Rico Valdez</div>
+                <div class="employee-stats">
+                  <div class="employee-stat">EN: 78%</div>
+                  <div class="employee-stat">Type: 58 WPM</div>
+                  <div class="employee-stat">1.5y exp</div>
+                </div>
+              </div>
+            </div>
+            <div class="employee-actions">
+              <div class="action-buttons" id="actions2">
+                <button class="btn-approve pixelated-btn">APPROVE</button>
+                <button class="btn-reject pixelated-btn">REJECT</button>
+              </div>
+              <div class="status-badge" id="status2">
+                <div class="status-rejected pixelated-btn">
+                  <svg width="8" height="8" viewBox="0 0 10 10" class="pixelated">
+                    <rect x="1" y="1" width="1" height="1" fill="#FF4444"/>
+                    <rect x="2" y="2" width="1" height="1" fill="#FF4444"/>
+                    <rect x="3" y="3" width="1" height="1" fill="#FF4444"/>
+                    <rect x="4" y="4" width="1" height="1" fill="#FF4444"/>
+                    <rect x="5" y="5" width="1" height="1" fill="#FF4444"/>
+                    <rect x="6" y="6" width="1" height="1" fill="#FF4444"/>
+                    <rect x="7" y="7" width="1" height="1" fill="#FF4444"/>
+                    <rect x="8" y="8" width="1" height="1" fill="#FF4444"/>
+                    <rect x="8" y="1" width="1" height="1" fill="#FF4444"/>
+                    <rect x="7" y="2" width="1" height="1" fill="#FF4444"/>
+                    <rect x="6" y="3" width="1" height="1" fill="#FF4444"/>
+                    <rect x="5" y="4" width="1" height="1" fill="#FF4444"/>
+                    <rect x="4" y="5" width="1" height="1" fill="#FF4444"/>
+                    <rect x="3" y="6" width="1" height="1" fill="#FF4444"/>
+                    <rect x="2" y="7" width="1" height="1" fill="#FF4444"/>
+                    <rect x="1" y="8" width="1" height="1" fill="#FF4444"/>
+                  </svg>
+                  REJECTED
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        ${(!isMobile && !isTablet) ? `
+          <div class="animated-cursor" id="animatedCursor" style="animation: cursorMovement 4s ease-in-out 1.8s both">
+            <svg width="14" height="18" viewBox="0 0 16 20" fill="none">
+              <path d="M0 0L0 15L5 10L8 15L10 14L7 9L12 9L0 0Z" fill="${ACCENT_COLOR}" opacity="0.9"/>
+            </svg>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+
+  // Animate approval buttons
+  const timer1 = setTimeout(() => {
+    const actions1 = document.getElementById('actions1');
+    const status1 = document.getElementById('status1');
+    const approveBtn1 = actions1.querySelector('.btn-approve');
+    approveBtn1.style.animation = 'buttonClickPulse 0.3s ease-out';
+    
+    setTimeout(() => {
+      actions1.style.animation = 'buttonToStatus 0.3s ease-out both';
+      setTimeout(() => {
+        status1.style.animation = 'statusAppear 0.3s ease-out both';
+      }, 200);
+    }, 400);
+  }, 2000);
+
+  const timer2 = setTimeout(() => {
+    const actions2 = document.getElementById('actions2');
+    const status2 = document.getElementById('status2');
+    const rejectBtn2 = actions2.querySelector('.btn-reject');
+    rejectBtn2.style.animation = 'rejectButtonPulse 0.3s ease-out';
+    
+    setTimeout(() => {
+      actions2.style.animation = 'buttonToStatus 0.3s ease-out both';
+      setTimeout(() => {
+        status2.style.animation = 'statusAppear 0.3s ease-out both';
+      }, 200);
+    }, 400);
+  }, 4000);
+
+  animationTimers.push(timer1, timer2);
+}
+
+// Render Learning slide
+function renderLearningSlide(container) {
+  container.innerHTML = `
+    <div class="curriculum-container">
+      <div class="curriculum-title" style="animation: daySlideIn 0.6s ease-out 0.1s both">3-DAY CURRICULUM</div>
+      <div class="curriculum-list">
+        <div class="curriculum-day" style="animation: daySlideIn 0.6s ease-out 0.3s both">
+          <div class="curriculum-day-header">
+            <div class="curriculum-day-number">
+              <span class="curriculum-day-number-text">1</span>
+            </div>
+            <div class="curriculum-day-title">
+              <div class="curriculum-day-title-text">Day 1: Industry Vocabulary</div>
+            </div>
+            <div class="curriculum-day-percent" id="progress1">0%</div>
+          </div>
+          <div class="curriculum-day-progress">
+            <div class="curriculum-progress-bar">
+              <div class="curriculum-progress-fill" id="progressBar1" style="animation: progressFill 1.0s ease-out 0.4s both"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculum-day" style="animation: daySlideIn 0.6s ease-out 0.5s both">
+          <div class="curriculum-day-header">
+            <div class="curriculum-day-number">
+              <span class="curriculum-day-number-text">2</span>
+            </div>
+            <div class="curriculum-day-title">
+              <div class="curriculum-day-title-text">Day 2: Basic Niche Concepts</div>
+            </div>
+            <div class="curriculum-day-percent" id="progress2">0%</div>
+          </div>
+          <div class="curriculum-day-progress">
+            <div class="curriculum-progress-bar">
+              <div class="curriculum-progress-fill" id="progressBar2" style="animation: progressFill 1.0s ease-out 0.8s both"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="curriculum-day" style="animation: daySlideIn 0.6s ease-out 0.7s both">
+          <div class="curriculum-day-header">
+            <div class="curriculum-day-number">
+              <span class="curriculum-day-number-text">3</span>
+            </div>
+            <div class="curriculum-day-title">
+              <div class="curriculum-day-title-text">Day 3: Practical Application</div>
+            </div>
+            <div class="curriculum-day-percent" id="progress3">0%</div>
+          </div>
+          <div class="curriculum-day-progress">
+            <div class="curriculum-progress-bar">
+              <div class="curriculum-progress-fill" id="progressBar3" style="animation: progressFill 1.0s ease-out 1.2s both"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="curriculum-summary" style="animation: daySlideIn 0.6s ease-out 1.8s both">
+        <div class="curriculum-summary-left">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="2" style="opacity: 0.7">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+          <span class="curriculum-summary-text">Course Complete</span>
+        </div>
+        <div class="curriculum-summary-right">
+          <div class="curriculum-checkmark">
+            <svg width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="${ACCENT_COLOR}" stroke-width="3">
+              <polyline points="20,6 9,17 4,12" style="animation: checkmarkDraw 0.8s ease-out 2.0s both"/>
+            </svg>
+          </div>
+          <span class="curriculum-summary-text">3/3 days</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Animate progress counters
+  progressCounters = [0, 0, 0];
+  
+  const timer1 = setTimeout(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count += 2;
+      if (count <= 100) {
+        progressCounters[0] = count;
+        document.getElementById('progress1').textContent = count + '%';
+      } else {
+        clearInterval(interval);
+      }
+    }, 24);
+  }, 800);
+
+  const timer2 = setTimeout(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count += 2;
+      if (count <= 100) {
+        progressCounters[1] = count;
+        document.getElementById('progress2').textContent = count + '%';
+      } else {
+        clearInterval(interval);
+      }
+    }, 24);
+  }, 1400);
+
+  const timer3 = setTimeout(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count += 2;
+      if (count <= 100) {
+        progressCounters[2] = count;
+        document.getElementById('progress3').textContent = count + '%';
+      } else {
+        clearInterval(interval);
+      }
+    }, 24);
+  }, 2000);
+
+  animationTimers.push(timer1, timer2, timer3);
+}
+
+// Render Ready slide
+function renderReadySlide(container) {
+  container.innerHTML = `
+    <div class="ready-container">
+      <div class="ready-star" style="animation: starEntrance 1.2s ease-out 0.3s both, glowPulse 2s ease-in-out 2s infinite">★</div>
+      <div class="ready-text" style="animation: daySlideIn 0.8s ease-out 1.0s both">
+        <div class="ready-text-inner" style="animation: teamReadyType 1.0s steps(10) 1.2s both; width: 0%; overflow: hidden">
+          TEAM READY
+        </div>
+      </div>
+      <div class="ready-subtitle" style="animation: daySlideIn 0.6s ease-out 2.5s both">14 DAYS COMPLETE</div>
+      <div class="ready-progress" style="animation: daySlideIn 0.6s ease-out 1.5s both">
+        <span>[</span>
+        <div class="ready-progress-bar">
+          <span class="ready-progress-bg">████████████████████</span>
+          <div class="ready-progress-fill" id="finalProgressFill">████████████████████</div>
+        </div>
+        <span>] <span id="finalProgressText">0</span>%</span>
+      </div>
+    </div>
+  `;
+
+  // Animate final progress
+  finalProgress = 0;
+  const timer = setTimeout(() => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count += 1;
+      if (count <= 100) {
+        finalProgress = count;
+        document.getElementById('finalProgressText').textContent = count;
+        document.getElementById('finalProgressFill').style.width = count + '%';
+      } else {
+        clearInterval(interval);
+      }
+    }, 25);
+  }, 1500);
+
+  animationTimers.push(timer);
+}
+
+// Navigation functions
+function goToSlide(index) {
+  currentSlide = index;
+  updateUI();
+}
+
+// Function to open Tilda popup
+function openTildaPopup(popupId) {
+  console.log('🔍 Opening popup:', popupId);
+  
+  try {
+    // Method 1: Find existing trigger
+    let existingTrigger = document.querySelector('[href="#popup:' + popupId + '"]');
+    if (existingTrigger) {
+      existingTrigger.click();
+      return true;
+    }
+    
+    // Method 2: Hash trigger
+    let hashTrigger = document.querySelector('[href="#' + popupId + '"]');
+    if (hashTrigger) {
+      hashTrigger.click();
+      return true;
+    }
+    
+    // Method 3: Create temporary trigger
+    let tempTrigger = document.createElement('a');
+    tempTrigger.href = '#popup:' + popupId;
+    tempTrigger.style.display = 'none';
+    tempTrigger.style.visibility = 'hidden';
+    tempTrigger.style.position = 'absolute';
+    tempTrigger.style.left = '-9999px';
+    
+    document.body.appendChild(tempTrigger);
+    
+    setTimeout(function() {
+      tempTrigger.click();
+      
+      setTimeout(function() {
+        if (document.body.contains(tempTrigger)) {
+          document.body.removeChild(tempTrigger);
+        }
+      }, 300);
+    }, 100);
+    
+    return true;
+  } catch (error) {
+    console.error('Error opening popup:', error);
+    
+    // Fallback methods
+    try {
+      window.location.hash = 'popup:' + popupId;
+    } catch (e) {
+      console.error('Hash method failed:', e);
+    }
+    
+    if (typeof $ !== 'undefined') {
+      try {
+        $('[href="#popup:' + popupId + '"], [href="#' + popupId + '"]').first().trigger('click');
+      } catch (jqError) {
+        console.error('jQuery method failed:', jqError);
+      }
+    }
+    
+    return false;
+  }
+}
+
+function nextSlide() {
+  console.log('Next slide clicked, current:', currentSlide);
+  
+  if (currentSlide < slides.length - 1) {
+    goToSlide(currentSlide + 1);
+  } else {
+    console.log('Last slide - opening popup');
+    
+    // Add delay for Tilda
+    setTimeout(function() {
+      let success = openTildaPopup('nextstep');
+      
+      if (!success) {
+        console.log('Trying alternative methods...');
+        
+        setTimeout(function() { openTildaPopup('nextstep'); }, 500);
+        setTimeout(function() { 
+          window.location.href = '#nextstep';
+        }, 1000);
+      }
+    }, 200);
+    
+    // Send metrics if available
+    if (typeof yaCounter !== 'undefined') {
+      yaCounter.reachGoal('journey_completed');
+      console.log('Yandex Metrics goal sent');
+    }
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'journey_completed', {
+        'event_category': 'engagement',
+        'event_label': '14_day_journey'
+      });
+      console.log('Google Analytics event sent');
+    }
+  }
+}
+
+function prevSlide() {
+  if (currentSlide > 0) {
+    goToSlide(currentSlide - 1);
+  }
+}
+
+// Initialize on load with Tilda-specific timing
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM loaded, initializing...');
+  
+  // Wait for Tilda to load
+  setTimeout(function() {
+    console.log('Initializing Journey Timeline...');
+    updateProgressPlacement();
+    init();
+    
+    // Additional check for Tilda elements
+    setTimeout(function() {
+      console.log('Checking for Tilda popups...');
+      
+      let allPopups = document.querySelectorAll('.t-popup, [class*="popup"]');
+      console.log('Found popups:', allPopups.length);
+      
+      let allHashLinks = document.querySelectorAll('[href*="#"]');
+      console.log('Found hash links:', allHashLinks.length);
+      allHashLinks.forEach((link, index) => {
+        if (link.href.includes('popup') || link.href.includes('nextstep')) {
+          console.log(`Relevant link ${index + 1}:`, link.href);
+        }
+      });
+    }, 500);
+  }, 1500);
+});
+
+// Additional initialization on full page load
+window.addEventListener('load', function() {
+  console.log('Page fully loaded');
+  
+  // Final check after 2 seconds
+  setTimeout(function() {
+    console.log('Final Tilda readiness check...');
+    
+    if (typeof window.t390_closePopup !== 'undefined') {
+      console.log('Tilda API partially available');
+    } else {
+      console.log('Tilda API not detected');
+    }
+  }, 2000);
+});
+</script>
